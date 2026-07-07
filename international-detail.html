@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>국제학교 상세</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">NSY</span>
+          <span>Study</span>
+        </a>
+        <nav class="nav-links">
+          <a href="regions.html">전국과외</a>
+          <a href="international.html">국제학교</a>
+          <a href="ged.html">검정고시</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container" style="padding:2rem 0;">
+        <a href="international.html" style="color:var(--primary);font-weight:700;">← 국제학교 목록으로 돌아가기</a>
+        <article class="article-card" style="margin-top:0.6rem;padding:1.4rem;border-radius:12px;border:1px solid var(--border);background:white;">
+          <div class="article-meta">
+            <span class="eyebrow">국제학교</span>
+            <h1 id="schoolTitle"></h1>
+            <div id="metaLine" style="color:var(--muted)"></div>
+          </div>
+          <img id="schoolHero" src="" alt="" style="width:100%;height:240px;object-fit:cover;border-radius:10px;display:block;margin-bottom:1rem;" />
+          <div id="schoolContent"></div>
+          <div style="margin-top:1rem;"><a id="schoolConsult" class="btn btn-primary" href="#">상담/문의</a></div>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NSY Study.</p>
+      </div>
+    </footer>
+
+    <script src="international-detail.js"></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>지역 상세 | 과외 안내</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">NSY</span>
+          <span>Study</span>
+        </a>
+        <nav class="nav-links">
+          <a href="regions.html">전국과외</a>
+          <a href="index.html#about">서비스 소개</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container" style="padding:2rem 0;">
+        <a href="regions.html" style="color:var(--primary);font-weight:700;">← 지역 목록으로 돌아가기</a>
+
+        <article class="article-card" style="margin-top:0.6rem;padding:1.4rem;border-radius:12px;border:1px solid var(--border);background:white;">
+          <div class="article-meta" id="articleMeta">
+            <span class="eyebrow">지역교육</span>
+            <h1 id="regionTitle" style="margin:0.6rem 0 0.4rem;"></h1>
+            <div style="color:var(--muted);font-size:0.95rem;margin-bottom:0.8rem;" id="metaLine"></div>
+          </div>
+
+          <img id="heroImg" src="" alt="지역 이미지" style="width:100%;height:240px;object-fit:cover;border-radius:10px;display:block;margin-bottom:1rem;" />
+
+          <div id="articleContent" style="color:var(--text);line-height:1.7">
+          </div>
+
+          <div id="consultCall" style="margin-top:1.6rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+            <div style="flex:1;min-width:220px;color:var(--muted);">
+              <h3 style="margin:0 0 0.6rem">전과목 과외 상담 안내</h3>
+              <p style="margin:0">수학·영어 포함 전과목 과외 상담을 통해 학생 수준에 맞춘 맞춤형 학습 플랜을 안내해드립니다. 상담은 무료이며, 방문·화상 모두 지원합니다.</p>
+            </div>
+            <div style="min-width:220px;">
+              <a id="consultBtn" class="btn btn-primary" href="#">무료 상담 신청하기</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NSY Study.</p>
+      </div>
+    </footer>
+
+    <script src="region.js"></script>
+  </body>
+</html>

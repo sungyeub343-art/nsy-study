@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>국제학교 안내 | 전국 국제학교 정보</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">NSY</span>
+          <span>Study</span>
+        </a>
+        <nav class="nav-links">
+          <a href="regions.html">전국과외</a>
+          <a href="international.html">국제학교</a>
+          <a href="ged.html">검정고시</a>
+          <a href="essay.html">논술</a>
+          <a href="index.html#about">서비스 소개</a>
+          <a href="index.html#process">진행 방식</a>
+          <a href="index.html#reviews">후기</a>
+          <a href="index.html#contact">무료 상담</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="section hero hero--compact">
+        <div class="container">
+          <div style="display:flex;gap:1rem;align-items:center;">
+            <div style="flex:1;">
+              <p class="eyebrow">국제학교</p>
+              <h1>국제학교 안내 | 지역별 국제학교 정보</h1>
+              <p style="color:var(--muted);margin-top:0.6rem;">지역별 국제학교 목록과 간단한 안내입니다. 학교명을 클릭하면 상세 정보를 확인할 수 있습니다.</p>
+              <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:1rem;gap:0.8rem;">
+                <a href="regions.html" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">전국과외</h3>
+                  <p style="color:var(--muted);margin:0;">지역별 수학·영어 과외 정보를 확인해보세요.</p>
+                </a>
+                <a href="ged.html" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">검정고시</h3>
+                  <p style="color:var(--muted);margin:0;">검정고시 과외와 시험 일정 정보를 확인해보세요.</p>
+                </a>
+                <a href="essay.html" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">논술</h3>
+                  <p style="color:var(--muted);margin:0;">지역별 논술 과외 정보를 확인해보세요.</p>
+                </a>
+                <a href="index.html#about" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">서비스 소개</h3>
+                  <p style="color:var(--muted);margin:0;">NSY Study의 맞춤형 과외 매칭 서비스를 소개합니다.</p>
+                </a>
+                <a href="index.html#process" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">진행 방식</h3>
+                  <p style="color:var(--muted);margin:0;">무료 상담부터 선생님 매칭까지의 진행 과정을 확인하세요.</p>
+                </a>
+                <a href="index.html#reviews" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">후기</h3>
+                  <p style="color:var(--muted);margin:0;">실제 학생과 부모님의 만족스러운 후기를 확인하세요.</p>
+                </a>
+                <a href="index.html#contact" class="info-card" style="text-decoration:none;display:block;">
+                  <h3 style="margin-bottom:0.35rem;">무료 상담</h3>
+                  <p style="color:var(--muted);margin:0;">전문가와의 무료 상담을 신청하고 상담 받으세요.</p>
+                </a>
+              </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="card-grid" style="grid-template-columns:1fr;">
+            <div class="info-card">
+              <h3>지역별 국제학교</h3>
+              <p style="color:var(--muted)">도/광역시를 선택하면 해당 지역의 국제학교 목록이 표시됩니다.</p>
+            </div>
+          </div>
+
+          <div id="intlPanel" class="region-panel"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <p>© 2026 NSY Study. 국제학교 안내.</p>
+        <a href="index.html">홈으로</a>
+      </div>
+    </footer>
+
+    <script src="international-data.js?v=20260707a"></script>
+  </body>
+</html>
