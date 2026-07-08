@@ -269,6 +269,35 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.review-photo-grid {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.review-photo-card {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+}
+
+.review-photo-card img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.review-photo-card figcaption {
+  padding: 0.8rem 1rem 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
 .review-card strong {
   display: inline-block;
   margin-top: 1rem;
@@ -336,6 +365,7 @@ h1 {
   .card-grid,
   .steps,
   .review-grid,
+  .review-photo-grid,
   .pricing-box {
     grid-template-columns: 1fr;
   }
