@@ -29,54 +29,40 @@
     <main>
       <section class="section hero hero--compact">
         <div class="container">
-          <div>
-            <p class="eyebrow">논술 과외</p>
-            <h1>논술 안내 | 전국 논술 과외</h1>
-            <p style="color:var(--muted);margin-top:0.6rem;">지역별 논술 과외 상담 안내 페이지입니다. 원하는 지역을 선택해 상담을 신청하세요.</p>
-            <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:1rem;gap:0.8rem;">
-              <a href="regions.html" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">전국과외</h3>
-                <p style="color:var(--muted);margin:0;">지역별 수학·영어 과외 정보를 확인해보세요.</p>
-              </a>
-              <a href="international.html" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">국제학교</h3>
-                <p style="color:var(--muted);margin:0;">국제학교 진학·과외 상담을 확인해보세요.</p>
-              </a>
-              <a href="ged.html" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">검정고시</h3>
-                <p style="color:var(--muted);margin:0;">검정고시 과외와 시험 일정 정보를 확인해보세요.</p>
-              </a>
-              <a href="index.html#about" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">서비스 소개</h3>
-                <p style="color:var(--muted);margin:0;">NSY Study의 맞춤형 과외 매칭 서비스를 소개합니다.</p>
-              </a>
-              <a href="index.html#process" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">진행 방식</h3>
-                <p style="color:var(--muted);margin:0;">무료 상담부터 선생님 매칭까지의 진행 과정을 확인하세요.</p>
-              </a>
-              <a href="index.html#reviews" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">후기</h3>
-                <p style="color:var(--muted);margin:0;">실제 학생과 부모님의 만족스러운 후기를 확인하세요.</p>
-              </a>
-              <a href="index.html#contact" class="info-card" style="text-decoration:none;display:block;">
-                <h3 style="margin-bottom:0.35rem;">무료 상담</h3>
-                <p style="color:var(--muted);margin:0;">전문가와의 무료 상담을 신청하고 상담 받으세요.</p>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+          <div class="regions-hero-center">
+            <p class="coverage-badge">Essay Coverage</p>
+            <h1>논술 지역 안내</h1>
+            <p class="regions-hero-desc">
+              원하는 지역을 검색하거나 시·도를 선택하면 논술 과외 안내 페이지로 바로 이동합니다.<br />
+              수리논술·인문논술·자연계논술 대비 수업 상담을 지역별로 안내합니다.
+            </p>
 
-      <section class="section">
-        <div class="container">
-          <div class="card-grid" style="grid-template-columns:1fr;">
-            <div class="info-card">
-              <h3>지역을 선택하세요</h3>
-              <p style="color:var(--muted)">원하는 지역을 클릭하시면 해당 지역의 상세 논술 과외 정보를 확인할 수 있습니다.</p>
+            <div class="regions-tabs" aria-label="서비스 바로가기">
+              <a class="regions-tab" href="regions.html">📚 수학·영어과외</a>
+              <a class="regions-tab" href="international.html">🏫 국제학교</a>
+              <a class="regions-tab" href="ged.html">📝 검정고시</a>
+              <a class="regions-tab regions-tab--active" href="essay.html">✍️ 논술</a>
             </div>
-          </div>
 
-          <div class="region-panel" id="essayPanel"></div>
+            <div class="region-search-wrap" role="search">
+              <span class="region-search-icon" aria-hidden="true">🔎</span>
+              <input
+                id="essaySearchInput"
+                type="search"
+                placeholder="논술 지역 검색 (예: 강남구, 수원시, 제주시)"
+                aria-label="논술 지역 검색"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="region-search-results" id="essaySearchResults" aria-live="polite"></div>
+
+            <div class="province-chip-grid" id="essayProvinceChipGrid" aria-label="논술 시도 빠른 선택"></div>
+
+            <p class="region-help-text" id="essayHelpText">시·도 버튼 또는 검색으로 지역을 선택하면 논술 상세 페이지로 이동합니다.</p>
+
+            <div class="city-chip-grid" id="essayCityChipGrid" aria-label="논술 시군구 선택"></div>
+          </div>
         </div>
       </section>
     </main>
@@ -88,6 +74,6 @@
       </div>
     </footer>
 
-      <script src="essay-data.js?v=20260707a"></script>
+      <script src="essay-data.js?v=20260718a"></script>
   </body>
 </html>
