@@ -24,10 +24,10 @@ async function loadRegions(){
     const res = await fetch('data/regions.json');
     if(!res.ok) throw new Error('Network response was not ok');
     const data = await res.json();
-    renderRegions(data);
+    initRegionsUI(data);
   }catch(e){
     console.warn('Fetch failed, using fallbackRegions', e);
-    renderRegions(fallbackRegions);
+    initRegionsUI(fallbackRegions);
   }
 }
 
@@ -41,38 +41,179 @@ function buildPageUrl(pageName, query) {
   return `${basePath}${pageName}?${query.toString()}`;
 }
 
-function renderRegions(data){
-  const container = document.getElementById('regionPanel');
-  container.innerHTML = '';
+function getSubRegions(province, city){
+  const root = window.subRegionsData || {};
+  const provMap = root[province] || {};
+  return provMap[city] || [];
+}
 
-  data.forEach(prov => {
-    const box = document.createElement('div');
-    box.className = 'region-card-large';
+function buildRegionUrl(province, city, town){
+  const params = new URLSearchParams({ province, city });
+  if(town) params.set('town', town);
+  return buildPageUrl('region.html', params);
+}
 
-    const title = document.createElement('h3');
-    title.style.color = '#6a33f6';
-    title.style.marginBottom = '0.6rem';
-    title.textContent = prov.province;
+function normalizeText(value){
+  return (value || '').toString().trim().toLowerCase();
+}
 
-    const grid = document.createElement('div');
-    grid.className = 'district-grid';
+function getProvinceLabel(province){
+  if(province === '서울특별시') return '서울';
+  if(province === '인천광역시') return '인천';
+  if(province === '부산광역시') return '부산';
+  if(province === '대구광역시') return '대구';
+  if(province === '광주광역시') return '광주';
+  if(province === '대전광역시') return '대전';
+  if(province === '울산광역시') return '울산';
+  if(province === '세종특별자치시') return '세종';
+  if(province === '경기도') return '경기';
+  if(province === '강원도') return '강원';
+  if(province === '충청북도') return '충북';
+  if(province === '충청남도') return '충남';
+  if(province === '전라북도') return '전북';
+  if(province === '전라남도') return '전남';
+  if(province === '경상북도') return '경북';
+  if(province === '경상남도') return '경남';
+  if(province === '제주특별자치도') return '제주';
+  return province;
+}
 
-    prov.cities.forEach(city => {
-      const a = document.createElement('a');
-      a.className = 'district-chip';
-      const params = new URLSearchParams({
+function flattenRegions(data){
+  const rows = [];
+
+  data.forEach((prov) => {
+    prov.cities.forEach((city) => {
+      rows.push({
         province: prov.province,
-        city
+        city,
+        town: '',
+        label: `${city} (${getProvinceLabel(prov.province)})`,
+        keyword: `${prov.province} ${getProvinceLabel(prov.province)} ${city}`.toLowerCase(),
+        href: buildRegionUrl(prov.province, city, '')
       });
-      a.href = buildPageUrl('region.html', params);
+
+      const towns = getSubRegions(prov.province, city);
+      towns.forEach((town) => {
+        rows.push({
+          province: prov.province,
+          city,
+          town,
+          label: `${town} (${city}, ${getProvinceLabel(prov.province)})`,
+          keyword: `${prov.province} ${getProvinceLabel(prov.province)} ${city} ${town}`.toLowerCase(),
+          href: buildRegionUrl(prov.province, city, town)
+        });
+      });
+    });
+  });
+
+  return rows;
+}
+
+function initRegionsUI(data){
+  const provinceChipGrid = document.getElementById('provinceChipGrid');
+  const cityChipGrid = document.getElementById('cityChipGrid');
+  const regionSearchInput = document.getElementById('regionSearchInput');
+  const regionSearchResults = document.getElementById('regionSearchResults');
+  const regionHelpText = document.getElementById('regionHelpText');
+
+  if(!provinceChipGrid || !cityChipGrid || !regionSearchInput || !regionSearchResults || !regionHelpText){
+    return;
+  }
+
+  const flattened = flattenRegions(data);
+  let activeProvince = data[0] ? data[0].province : '';
+
+  function renderProvinceChips(){
+    provinceChipGrid.innerHTML = '';
+
+    data.forEach((prov) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'province-chip';
+      if(prov.province === activeProvince) {
+        btn.classList.add('province-chip--active');
+      }
+      btn.textContent = getProvinceLabel(prov.province);
+
+      btn.addEventListener('click', () => {
+        activeProvince = prov.province;
+        renderProvinceChips();
+        renderCityChips();
+        regionSearchInput.value = '';
+        regionSearchResults.innerHTML = '';
+      });
+
+      provinceChipGrid.appendChild(btn);
+    });
+  }
+
+  function renderCityChips(){
+    cityChipGrid.innerHTML = '';
+
+    const selected = data.find((item) => item.province === activeProvince);
+    if(!selected){
+      regionHelpText.textContent = '원하는 지역을 입력해 바로 이동해보세요.';
+      return;
+    }
+
+    regionHelpText.textContent = `${getProvinceLabel(selected.province)} 지역 시·군·구를 선택하면 상세 페이지로 이동합니다.`;
+
+    selected.cities.forEach((city) => {
+      const a = document.createElement('a');
+      a.className = 'city-chip';
+      a.href = buildRegionUrl(selected.province, city, '');
       a.textContent = city;
-      grid.appendChild(a);
+      cityChipGrid.appendChild(a);
+    });
+  }
+
+  function renderSearchResults(items){
+    regionSearchResults.innerHTML = '';
+
+    if(items.length === 0){
+      regionSearchResults.innerHTML = '<p class="region-result-empty">검색 결과가 없습니다. 시·도 또는 시·군·구 이름으로 다시 입력해 주세요.</p>';
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'region-result-list';
+
+    items.slice(0, 9).forEach((item) => {
+      const a = document.createElement('a');
+      a.className = 'region-result-item';
+      a.href = item.href;
+      a.innerHTML = `<strong>${item.town || item.city}</strong><span>${item.province} ${item.city}${item.town ? ` · ${item.town}` : ''}</span>`;
+      list.appendChild(a);
     });
 
-    box.appendChild(title);
-    box.appendChild(grid);
-    container.appendChild(box);
+    regionSearchResults.appendChild(list);
+  }
+
+  regionSearchInput.addEventListener('input', () => {
+    const q = normalizeText(regionSearchInput.value);
+    if(!q){
+      regionSearchResults.innerHTML = '';
+      return;
+    }
+
+    const filtered = flattened.filter((row) => row.keyword.includes(q));
+    renderSearchResults(filtered);
   });
+
+  regionSearchInput.addEventListener('keydown', (event) => {
+    if(event.key !== 'Enter') return;
+
+    const q = normalizeText(regionSearchInput.value);
+    if(!q) return;
+
+    const firstMatch = flattened.find((row) => row.keyword.includes(q));
+    if(firstMatch){
+      window.location.href = firstMatch.href;
+    }
+  });
+
+  renderProvinceChips();
+  renderCityChips();
 }
 
 document.addEventListener('DOMContentLoaded', loadRegions);

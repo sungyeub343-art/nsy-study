@@ -529,3 +529,236 @@ h1 {
   .tip-cards { grid-template-columns: 1fr; }
   .schedule-table th, .schedule-table td { padding:0.7rem; }
 }
+
+/* Regions search-first layout */
+.regions-hero-center {
+  max-width: 1120px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.coverage-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.42rem 0.86rem;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f9d58;
+  background: #dff7ea;
+}
+
+.regions-hero-desc {
+  margin: 0.8rem auto 0;
+  max-width: 880px;
+  color: var(--muted);
+  font-size: 1.28rem;
+  line-height: 1.75;
+}
+
+.regions-tabs {
+  margin-top: 2rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.regions-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.72rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid #d6deeb;
+  background: #ffffff;
+  color: #243043;
+  font-weight: 800;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.regions-tab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.regions-tab--active {
+  background: #101f3c;
+  color: #ffffff;
+  border-color: #101f3c;
+  box-shadow: 0 12px 24px rgba(16, 31, 60, 0.22);
+}
+
+.region-search-wrap {
+  width: min(860px, 100%);
+  margin: 1.6rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+  min-height: 74px;
+  padding: 0 1.35rem;
+  border-radius: 999px;
+  border: 1px solid #dce5f2;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.region-search-icon {
+  font-size: 1.35rem;
+  opacity: 0.85;
+}
+
+.region-search-wrap input[type="search"] {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  font-size: 1.3rem;
+  color: #2b3648;
+  background: transparent;
+}
+
+.region-search-wrap input[type="search"]::placeholder {
+  color: #76859b;
+}
+
+.region-search-results {
+  width: min(860px, 100%);
+  margin: 0.8rem auto 0;
+  text-align: left;
+}
+
+.region-result-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.region-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dce5f2;
+  background: #ffffff;
+}
+
+.region-result-item strong {
+  font-size: 0.98rem;
+  color: #14223a;
+}
+
+.region-result-item span {
+  font-size: 0.9rem;
+  color: #6b7c93;
+  text-align: right;
+}
+
+.region-result-empty {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #dce5f2;
+  background: #ffffff;
+  color: #6b7c93;
+}
+
+.province-chip-grid,
+.city-chip-grid {
+  margin-top: 1.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.66rem;
+}
+
+.province-chip {
+  min-width: 84px;
+  min-height: 48px;
+  padding: 0.5rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid #d3ddec;
+  background: #ffffff;
+  color: #17253e;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.province-chip--active {
+  background: #17253e;
+  color: #ffffff;
+  border-color: #17253e;
+}
+
+.city-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 11px;
+  border: 1px solid #d7e2f2;
+  background: #ffffff;
+  color: #243043;
+  font-weight: 700;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.city-chip:hover {
+  transform: translateY(-1px);
+  border-color: #a9b7cc;
+}
+
+.region-help-text {
+  margin: 1rem 0 0;
+  color: #617088;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .regions-hero-desc {
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .regions-tab {
+    min-height: 46px;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .region-search-wrap {
+    min-height: 60px;
+    border-radius: 18px;
+    padding: 0 0.9rem;
+  }
+
+  .region-search-wrap input[type="search"] {
+    font-size: 1rem;
+  }
+
+  .province-chip {
+    min-width: 72px;
+    min-height: 42px;
+    font-size: 0.92rem;
+  }
+
+  .city-chip {
+    min-height: 40px;
+    font-size: 0.92rem;
+  }
+
+  .region-result-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.28rem;
+  }
+
+  .region-result-item span {
+    text-align: left;
+  }
+}

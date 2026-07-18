@@ -29,58 +29,44 @@
     <main>
       <section class="section hero hero--compact">
         <div class="container">
-          <div style="display:flex;gap:1rem;align-items:center;">
-            <div style="flex:1;">
-              <p class="eyebrow">지역교육</p>
-              <h1>지역별 과외 안내 | 전국 맞춤 수학·영어 과외</h1>
-              <p style="color:var(--muted);margin-top:0.6rem;">원하는 지역을 클릭하면 해당 지역의 상세 과외 정보를 확인할 수 있습니다.</p>
-              <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:1rem;gap:0.8rem;">
-                <a href="international.html" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">국제학교</h3>
-                  <p style="color:var(--muted);margin:0;">국제학교 진학·과외 상담을 확인해보세요.</p>
-                </a>
-                <a href="ged.html" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">검정고시</h3>
-                  <p style="color:var(--muted);margin:0;">검정고시 과외와 시험 일정 정보를 확인해보세요.</p>
-                </a>
-                <a href="essay.html" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">논술</h3>
-                  <p style="color:var(--muted);margin:0;">지역별 논술 과외 정보를 확인해보세요.</p>
-                </a>
-                <a href="index.html#about" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">서비스 소개</h3>
-                  <p style="color:var(--muted);margin:0;">NSY Study의 맞춤형 과외 매칭 서비스를 소개합니다.</p>
-                </a>
-                <a href="index.html#process" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">진행 방식</h3>
-                  <p style="color:var(--muted);margin:0;">무료 상담부터 선생님 매칭까지의 진행 과정을 확인하세요.</p>
-                </a>
-                <a href="index.html#reviews" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">후기</h3>
-                  <p style="color:var(--muted);margin:0;">실제 학생과 부모님의 만족스러운 후기를 확인하세요.</p>
-                </a>
-                <a href="index.html#contact" class="info-card" style="text-decoration:none;display:block;">
-                  <h3 style="margin-bottom:0.35rem;">무료 상담</h3>
-                  <p style="color:var(--muted);margin:0;">전문가와의 무료 상담을 신청하고 상담 받으세요.</p>
-                </a>
-              </div>
-          </div>
-        </div>
-      </section>
+          <div class="regions-hero-center">
+            <p class="coverage-badge">Coverage</p>
+            <h1>지역별 설치 안내</h1>
+            <p class="regions-hero-desc">
+              지역명을 검색하거나 아래에서 시·도와 시·군·구를 선택하면 해당 지역 과외 안내로 바로 이동합니다.<br />
+              서울·인천·경기·대전·세종·충주·경북·경남·제주·전북·광주·전남까지 동 단위로 방문합니다.
+            </p>
 
-      <section class="section">
-        <div class="container">
-          <div class="card-grid" style="grid-template-columns:1fr;">
-            <div class="info-card">
-              <h3>지역을 선택하세요</h3>
-              <p style="color:var(--muted)">원하는 지역을 클릭하시면 해당 지역의 상세 과외 정보를 확인할 수 있습니다.</p>
+            <div class="regions-tabs" aria-label="서비스 바로가기">
+              <a class="regions-tab regions-tab--active" href="regions.html">📚 수학·영어과외</a>
+              <a class="regions-tab" href="international.html">🏫 국제학교</a>
+              <a class="regions-tab" href="ged.html">📝 검정고시</a>
             </div>
-          </div>
 
-          <div class="region-panel" id="regionPanel"></div>
+            <div class="region-search-wrap" role="search">
+              <span class="region-search-icon" aria-hidden="true">🔎</span>
+              <input
+                id="regionSearchInput"
+                type="search"
+                placeholder="지역·동네 검색 (예: 강남구, 역삼동, 수원시)"
+                aria-label="지역 검색"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="region-search-results" id="regionSearchResults" aria-live="polite"></div>
+
+            <div class="province-chip-grid" id="provinceChipGrid" aria-label="시도 빠른 선택"></div>
+
+            <p class="region-help-text" id="regionHelpText">원하는 시·도를 먼저 누르거나 지역명을 입력해 바로 이동할 수 있습니다.</p>
+
+            <div class="city-chip-grid" id="cityChipGrid" aria-label="시군구 선택"></div>
+          </div>
         </div>
       </section>
-    <script src="regions-data.js?v=20260707a"></script>
+
+    <script src="subregions-data.js?v=20260709a"></script>
+    <script src="regions-data.js?v=20260709a"></script>
     </main>
 
     <footer class="site-footer">
