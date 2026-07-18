@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const titleSuffix = '수학·영어과외 알지브라 지오메트리 IB AP';
   titleEl.textContent = `${record.name} ${titleSuffix}`.trim();
   metaLine.textContent = '국제학교 입학 및 교육과정 문의';
-  hero.src = 'international-image-11.jpg';
+  hero.src = 'international-image-11.jpg?v=20260718phonefix';
 
   const keywordHtml = (record.keywords || []).map(k => `<span class="subject-badge" style="margin:0.2rem;display:inline-block">${k}</span>`).join('');
   content.innerHTML = `
