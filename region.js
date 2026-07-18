@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   titleEl.textContent = `${placeText} 수학·영어 과외 상담 안내`;
   metaLine.innerHTML = `<span>과외정보팀 편집</span> · <span>${formatDate()}</span>`;
-  heroImg.src = '과외랜딩페이지11.jpg';
+  heroImg.src = 'tutoring-landing-11.jpg';
 
   if(!hasTown && subRegions.length > 0){
     subregionSection.style.display = 'block';
