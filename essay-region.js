@@ -3,12 +3,28 @@ function loadEssayRegion() {
   const province = params.get('province') || '지역';
   const city = params.get('city') || '';
 
-  const provinceKeyword = province
-    .replace(/특별자치도|특별자치시|특별시|광역시|자치시|자치도|도|시/g, '')
-    .trim();
-  const locationKeyword = city.startsWith(provinceKeyword)
-    ? city
-    : `${provinceKeyword}${city}`.trim();
+  function buildLocationKeyword(provinceName, cityName) {
+    const trimmedProvince = provinceName.trim();
+    const trimmedCity = cityName.trim();
+
+    if (!trimmedCity) {
+      return trimmedProvince || '지역';
+    }
+
+    if (/도$/.test(trimmedProvince)) {
+      return `${trimmedProvince} ${trimmedCity}`;
+    }
+
+    const provinceKeyword = trimmedProvince
+      .replace(/특별자치도|특별자치시|특별시|광역시|자치시|자치도|도|시/g, '')
+      .trim();
+
+    return trimmedCity.startsWith(provinceKeyword)
+      ? trimmedCity
+      : `${provinceKeyword}${trimmedCity}`.trim();
+  }
+
+  const locationKeyword = buildLocationKeyword(province, city);
 
   const titleEl = document.getElementById('essayTitle');
   const metaEl = document.getElementById('essayMeta');
