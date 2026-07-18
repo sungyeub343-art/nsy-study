@@ -3,17 +3,24 @@ function loadEssayRegion() {
   const province = params.get('province') || '지역';
   const city = params.get('city') || '';
 
+  const provinceKeyword = province
+    .replace(/특별자치도|특별자치시|특별시|광역시|자치시|자치도|도|시/g, '')
+    .trim();
+  const locationKeyword = city.startsWith(provinceKeyword)
+    ? city
+    : `${provinceKeyword}${city}`.trim();
+
   const titleEl = document.getElementById('essayTitle');
   const metaEl = document.getElementById('essayMeta');
   const contentEl = document.getElementById('essayContent');
   const heroEl = document.getElementById('essayHero');
 
   // 제목 설정
-  titleEl.textContent = `${city} 수리·인문논술 과외 무료 수업 안내`;
+  titleEl.textContent = `${locationKeyword} 수리·인문논술 과외 무료 수업 안내`;
   document.title = titleEl.textContent;
 
   // 메타 정보
-  metaEl.textContent = `${province} ${city} 지역의 맞춤형 논술 과외 과정입니다.`;
+  metaEl.textContent = `${locationKeyword} 맞춤형 논술 과외 과정입니다.`;
 
   // 대표 이미지
   if (heroEl) {
