@@ -120,7 +120,7 @@ const intlFallback = [
 ];
 
 function loadIntl(){
-  renderIntl(intlFallback);
+  initIntlUI(intlFallback);
 }
 
 function buildPageUrl(pageName, query) {
@@ -133,45 +133,161 @@ function buildPageUrl(pageName, query) {
   return `${basePath}${pageName}?${query.toString()}`;
 }
 
-function renderIntl(data){
-  const container = document.getElementById('intlPanel');
-  container.innerHTML = '';
-  data.forEach(group=>{
-    const box = document.createElement('div');
-    box.className = 'region-card-large';
-    const title = document.createElement('h3');
-    title.style.color = '#6a33f6';
-    title.style.marginBottom = '0.6rem';
-    title.textContent = group.province;
+function normalizeText(value){
+  return (value || '').toString().trim().toLowerCase();
+}
 
-    const grid = document.createElement('div');
-    grid.className = 'district-grid';
+function getProvinceLabel(province){
+  if(province === '서울특별시') return '서울';
+  if(province === '인천광역시') return '인천';
+  if(province === '부산광역시') return '부산';
+  if(province === '대구광역시') return '대구';
+  if(province === '광주광역시') return '광주';
+  if(province === '대전광역시') return '대전';
+  if(province === '울산광역시') return '울산';
+  if(province === '세종특별자치시') return '세종';
+  if(province === '경기도') return '경기';
+  if(province === '강원도') return '강원';
+  if(province === '충청북도') return '충북';
+  if(province === '충청남도') return '충남';
+  if(province === '전라북도') return '전북';
+  if(province === '전라남도') return '전남';
+  if(province === '경상북도') return '경북';
+  if(province === '경상남도') return '경남';
+  if(province === '제주특별자치도') return '제주';
+  if(province === '외국') return '해외';
+  return province;
+}
 
-    if(group.schools && group.schools.length>0){
-      group.schools.forEach(s=>{
-        const a = document.createElement('a');
-        a.className = 'district-chip';
-        const params = new URLSearchParams({
-          province: group.province,
-          city: s.city,
-          school: s.slug,
-          name: s.name
-        });
-        a.href = buildPageUrl('international-detail.html', params);
-        a.textContent = s.name;
-        grid.appendChild(a);
+function buildIntlDetailUrl(province, city, slug, name){
+  const params = new URLSearchParams({
+    province,
+    city,
+    school: slug,
+    name
+  });
+  return buildPageUrl('international-detail.html', params);
+}
+
+function flattenIntl(data){
+  const rows = [];
+  data.forEach((group) => {
+    (group.schools || []).forEach((school) => {
+      rows.push({
+        province: group.province,
+        city: school.city,
+        name: school.name,
+        slug: school.slug,
+        keyword: `${group.province} ${getProvinceLabel(group.province)} ${school.city} ${school.name}`.toLowerCase(),
+        href: buildIntlDetailUrl(group.province, school.city, school.slug, school.name)
       });
-    } else {
-      const p = document.createElement('p');
-      p.style.color='var(--muted)';
-      p.textContent = '해당 지역의 국제학교 목록이 없습니다.';
-      grid.appendChild(p);
+    });
+  });
+  return rows;
+}
+
+function initIntlUI(data){
+  const provinceChipGrid = document.getElementById('intlProvinceChipGrid');
+  const schoolChipGrid = document.getElementById('intlSchoolChipGrid');
+  const searchInput = document.getElementById('intlSearchInput');
+  const searchResults = document.getElementById('intlSearchResults');
+  const helpText = document.getElementById('intlHelpText');
+
+  if(!provinceChipGrid || !schoolChipGrid || !searchInput || !searchResults || !helpText){
+    return;
+  }
+
+  const flattened = flattenIntl(data);
+  let activeProvince = data[0] ? data[0].province : '';
+
+  function renderProvinceChips(){
+    provinceChipGrid.innerHTML = '';
+    data.forEach((group) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'province-chip';
+      if(group.province === activeProvince){
+        btn.classList.add('province-chip--active');
+      }
+      btn.textContent = getProvinceLabel(group.province);
+      btn.addEventListener('click', () => {
+        activeProvince = group.province;
+        renderProvinceChips();
+        renderSchoolChips();
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      });
+      provinceChipGrid.appendChild(btn);
+    });
+  }
+
+  function renderSchoolChips(){
+    schoolChipGrid.innerHTML = '';
+
+    const selected = data.find((item) => item.province === activeProvince);
+    if(!selected || !selected.schools || selected.schools.length === 0){
+      helpText.textContent = '학교명 또는 지역명을 검색해 국제학교 상세 정보를 확인하세요.';
+      return;
     }
 
-    box.appendChild(title);
-    box.appendChild(grid);
-    container.appendChild(box);
+    helpText.textContent = `${getProvinceLabel(selected.province)} 지역 국제학교를 선택하면 상세 페이지로 이동합니다.`;
+
+    selected.schools.forEach((school) => {
+      const a = document.createElement('a');
+      a.className = 'city-chip';
+      a.href = buildIntlDetailUrl(selected.province, school.city, school.slug, school.name);
+      a.textContent = school.name;
+      schoolChipGrid.appendChild(a);
+    });
+  }
+
+  function renderSearchResults(items){
+    searchResults.innerHTML = '';
+
+    if(items.length === 0){
+      searchResults.innerHTML = '<p class="region-result-empty">검색 결과가 없습니다. 학교명이나 지역명을 다시 입력해 주세요.</p>';
+      return;
+    }
+
+    const list = document.createElement('div');
+    list.className = 'region-result-list';
+
+    items.slice(0, 10).forEach((item) => {
+      const a = document.createElement('a');
+      a.className = 'region-result-item';
+      a.href = item.href;
+      a.innerHTML = `<strong>${item.name}</strong><span>${item.province} ${item.city}</span>`;
+      list.appendChild(a);
+    });
+
+    searchResults.appendChild(list);
+  }
+
+  searchInput.addEventListener('input', () => {
+    const q = normalizeText(searchInput.value);
+    if(!q){
+      searchResults.innerHTML = '';
+      return;
+    }
+
+    const filtered = flattened.filter((row) => row.keyword.includes(q));
+    renderSearchResults(filtered);
   });
+
+  searchInput.addEventListener('keydown', (event) => {
+    if(event.key !== 'Enter') return;
+
+    const q = normalizeText(searchInput.value);
+    if(!q) return;
+
+    const firstMatch = flattened.find((row) => row.keyword.includes(q));
+    if(firstMatch){
+      window.location.href = firstMatch.href;
+    }
+  });
+
+  renderProvinceChips();
+  renderSchoolChips();
 }
 
 document.addEventListener('DOMContentLoaded', loadIntl);
