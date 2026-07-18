@@ -1,5 +1,27 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
+function buildPageUrl(pageName, query) {
+  const path = window.location.pathname;
+  const basePath = path.endsWith('/')
+    ? path
+    : path.includes('.')
+      ? path.slice(0, path.lastIndexOf('/') + 1)
+      : `${path}/`;
+  return `${basePath}${pageName}?${query.toString()}`;
+}
+
+function buildRegionUrl(province, city, town){
+  const params = new URLSearchParams({ province, city });
+  if(town) params.set('town', town);
+  return buildPageUrl('region.html', params);
+}
+
+function getSubRegions(province, city){
+  const root = window.subRegionsData || {};
+  const provMap = root[province] || {};
+  return provMap[city] || [];
+}
+
 function sampleTeachers(province, city){
   const key = province + '|' + city;
   const db = {
@@ -23,10 +45,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const params = new URLSearchParams(location.search);
   const province = decodeParam(params.get('province') || '');
   const city = decodeParam(params.get('city') || '');
+  const town = decodeParam(params.get('town') || '');
 
+  const backToList = document.getElementById('backToList');
   const titleEl = document.getElementById('regionTitle');
   const metaLine = document.getElementById('metaLine');
   const heroImg = document.getElementById('heroImg');
+  const subregionSection = document.getElementById('subregionSection');
+  const subregionTitle = document.getElementById('subregionTitle');
+  const subregionHelp = document.getElementById('subregionHelp');
+  const subregionGrid = document.getElementById('subregionGrid');
   const contentEl = document.getElementById('articleContent');
   const teachersEl = document.getElementById('teachers');
 
@@ -38,13 +66,44 @@ document.addEventListener('DOMContentLoaded', ()=>{
     return;
   }
 
-  titleEl.textContent = `${province} ${city} 수학·영어 과외 상담 안내`;
+  const subRegions = getSubRegions(province, city);
+  const hasTown = !!town;
+  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+
+  if(backToList){
+    if(hasTown){
+      backToList.href = buildRegionUrl(province, city, '');
+      backToList.textContent = `← ${city} 동읍면 목록으로 돌아가기`;
+    } else {
+      backToList.href = 'regions.html';
+      backToList.textContent = '← 지역 목록으로 돌아가기';
+    }
+  }
+
+  titleEl.textContent = `${placeText} 수학·영어 과외 상담 안내`;
   metaLine.innerHTML = `<span>과외정보팀 편집</span> · <span>${formatDate()}</span>`;
-  heroImg.src = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder';
+  heroImg.src = '과외랜딩페이지11.jpg';
+
+  if(!hasTown && subRegions.length > 0){
+    subregionSection.style.display = 'block';
+    subregionTitle.textContent = `${city} 동읍면 지역 선택`;
+    subregionHelp.textContent = '거주 또는 수업 희망 동읍면을 선택하면 해당 지역 상담 페이지로 이동합니다.';
+    subregionGrid.innerHTML = '';
+
+    subRegions.forEach((name)=>{
+      const a = document.createElement('a');
+      a.className = 'district-chip';
+      a.textContent = name;
+      a.href = buildRegionUrl(province, city, name);
+      subregionGrid.appendChild(a);
+    });
+  } else {
+    subregionSection.style.display = 'none';
+  }
 
   // Article body: consultation-focused template
   contentEl.innerHTML = `
-    <p style="margin-top:0">${city} 지역의 전과목 과외 상담 안내<br>
+    <p style="margin-top:0">${hasTown ? `${town} 지역` : `${city} 지역`}의 전과목 과외 상담 안내<br>
     수학·영어 포함(국어, 사회, 역사, 과학 등등) 전과목 과외 상담을 통해 학생 수준에 맞춘 맞춤형 학습 플랜을 안내해드립니다. 상담은 무료이며, 방문·화상 모두 지원합니다.</p>
     <h2 style="margin-top:1rem">상담 시 안내해드리는 항목</h2>
     <ul>
@@ -66,7 +125,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     {title: '일정 관리', body: '시험/내신 일정에 맞춰 역량별 우선순위로 학습하세요.'}
   ];
 
-  let tipsHtml = `<h2 style="margin-top:1.2rem">${city} 준비 팁</h2>`;
+  let tipsHtml = `<h2 style="margin-top:1.2rem">${hasTown ? town : city} 준비 팁</h2>`;
   tipsHtml += `<div class="tip-cards">`;
   tips.forEach(t => {
     tipsHtml += `<div class="tip-card"><h4>${t.title}</h4><p>${t.body}</p></div>`;
@@ -76,7 +135,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // Configure consultation button
   const consultBtn = document.getElementById('consultBtn');
-  const mailSubject = encodeURIComponent(`${province} ${city} 수학·영어 과외 상담 신청`);
+  const mailSubject = encodeURIComponent(`${placeText} 수학·영어 과외 상담 신청`);
   // Primary action: 전화 연결. Fallback: mailto included in data- attributes
   const telNumber = '+821029283614';
   consultBtn.href = `tel:${telNumber}`;
