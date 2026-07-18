@@ -22,14 +22,19 @@
 
     <main>
       <div class="container" style="padding:2rem 0;">
-        <a href="ged.html" style="color:var(--primary);font-weight:700;">← 검정고시 지역 목록으로 돌아가기</a>
+        <a id="backToGedList" href="ged.html" style="color:var(--primary);font-weight:700;">← 검정고시 지역 목록으로 돌아가기</a>
         <article class="article-card" style="margin-top:0.6rem;padding:1.4rem;border-radius:12px;border:1px solid var(--border);background:white;">
           <div class="article-meta">
             <span class="eyebrow">검정고시</span>
             <h1 id="gedTitle"></h1>
             <div id="metaLine" style="color:var(--muted)"></div>
           </div>
-          <img id="gedHero" src="" alt="" style="width:100%;height:240px;object-fit:cover;border-radius:10px;display:block;margin-bottom:1rem;" />
+          <img id="gedHero" src="ged-image-11.jpg" alt="검정고시 안내 이미지" style="width:min(560px,100%);height:auto;object-fit:contain;border-radius:10px;display:block;margin:0 auto 1rem;" />
+          <section id="gedSubregionSection" style="display:none;margin-bottom:1rem;">
+            <h2 id="gedSubregionTitle" style="margin:0 0 0.6rem;font-size:1.15rem;"></h2>
+            <p id="gedSubregionHelp" style="margin:0 0 0.8rem;color:var(--muted);"></p>
+            <div id="gedSubregionGrid" class="district-grid"></div>
+          </section>
           <div id="gedContent"></div>
           <div style="margin-top:1rem;"><a id="gedConsult" class="btn btn-primary" href="#">검정고시 상담 신청</a></div>
         </article>
@@ -42,6 +47,7 @@
       </div>
     </footer>
 
+    <script src="subregions-data.js"></script>
     <script src="ged-detail.js"></script>
   </body>
 </html>

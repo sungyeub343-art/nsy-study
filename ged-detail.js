@@ -1,13 +1,41 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
+function buildPageUrl(pageName, query) {
+  const path = window.location.pathname;
+  const basePath = path.endsWith('/')
+    ? path
+    : path.includes('.')
+      ? path.slice(0, path.lastIndexOf('/') + 1)
+      : `${path}/`;
+  return `${basePath}${pageName}?${query.toString()}`;
+}
+
+function buildGedDetailUrl(province, city, town){
+  const params = new URLSearchParams({ province, city });
+  if(town) params.set('town', town);
+  return buildPageUrl('ged-detail.html', params);
+}
+
+function getSubRegions(province, city){
+  const root = window.subRegionsData || {};
+  const provMap = root[province] || {};
+  return provMap[city] || [];
+}
+
 document.addEventListener('DOMContentLoaded', async ()=>{
   const params = new URLSearchParams(location.search);
   const province = decodeParam(params.get('province')||'');
   const city = decodeParam(params.get('city')||'');
+  const town = decodeParam(params.get('town')||'');
 
+  const backToGedList = document.getElementById('backToGedList');
   const titleEl = document.getElementById('gedTitle');
   const metaLine = document.getElementById('metaLine');
   const hero = document.getElementById('gedHero');
+  const subregionSection = document.getElementById('gedSubregionSection');
+  const subregionTitle = document.getElementById('gedSubregionTitle');
+  const subregionHelp = document.getElementById('gedSubregionHelp');
+  const subregionGrid = document.getElementById('gedSubregionGrid');
   const content = document.getElementById('gedContent');
   const consult = document.getElementById('gedConsult');
 
@@ -17,12 +45,43 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     return;
   }
 
-  titleEl.textContent = `${province} ${city} 검정고시 과외 안내`;
+  const hasTown = !!town;
+  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const subRegions = getSubRegions(province, city);
+
+  if(backToGedList){
+    if(hasTown){
+      backToGedList.href = buildGedDetailUrl(province, city, '');
+      backToGedList.textContent = `← ${city} 동읍면 목록으로 돌아가기`;
+    } else {
+      backToGedList.href = 'ged.html';
+      backToGedList.textContent = '← 검정고시 지역 목록으로 돌아가기';
+    }
+  }
+
+  if(!hasTown && subRegions.length > 0){
+    subregionSection.style.display = 'block';
+    subregionTitle.textContent = `${city} 동읍면 지역 선택`;
+    subregionHelp.textContent = '거주 또는 수업 희망 동읍면을 선택하면 해당 지역 검정고시 상담 페이지로 이동합니다.';
+    subregionGrid.innerHTML = '';
+
+    subRegions.forEach((name)=>{
+      const a = document.createElement('a');
+      a.className = 'district-chip';
+      a.textContent = name;
+      a.href = buildGedDetailUrl(province, city, name);
+      subregionGrid.appendChild(a);
+    });
+  } else {
+    subregionSection.style.display = 'none';
+  }
+
+  titleEl.textContent = `${placeText} 검정고시 과외 안내`;
   metaLine.textContent = '검정고시 대비 무료 상담 — 방문/화상 가능';
-  hero.src = 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder';
+  hero.src = 'ged-image-11.jpg';
 
   content.innerHTML = `
-    <p style="margin-top:0;color:var(--muted)">${city} 지역의 검정고시(중·고졸 학력 인정) 대비 과외 상담 안내입니다. 학습 현황 진단 후 맞춤형 커리큘럼과 시험 대비 전략을 안내합니다.</p>
+    <p style="margin-top:0;color:var(--muted)">${hasTown ? town : city} 지역의 검정고시(중·고졸 학력 인정) 대비 과외 상담 안내입니다. 학습 현황 진단 후 맞춤형 커리큘럼과 시험 대비 전략을 안내합니다.</p>
     <h3 style="margin-top:1rem">상담 항목</h3>
     <ul>
       <li>목표(중졸/고졸) 및 희망 시험 일정</li>
@@ -33,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   // 준비 팁 섹션 for GED
   const gedTips = `
-    <h3 style="margin-top:1rem">${city} 검정고시 준비 팁</h3>
+    <h3 style="margin-top:1rem">${hasTown ? town : city} 검정고시 준비 팁</h3>
     <div class="info-card" style="margin-top:0.6rem;">
       <ul style="margin:0;padding-left:1.1rem;color:var(--muted)">
         <li>시험 종류(중졸/고졸)와 응시 자격을 먼저 확인하세요.</li>
@@ -64,5 +123,5 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const telNumber = '+821029283614';
   consult.href = `tel:${telNumber}`;
   consult.textContent = '전화로 상담하기';
-  consult.setAttribute('data-mailto', `mailto:hello@nsystudy.kr?subject=${encodeURIComponent(province+' '+city+' 검정고시 상담 신청')}`);
+  consult.setAttribute('data-mailto', `mailto:hello@nsystudy.kr?subject=${encodeURIComponent(placeText+' 검정고시 상담 신청')}`);
 });
