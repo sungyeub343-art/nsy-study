@@ -7,12 +7,24 @@
     <loc>https://nsystudy.kr/regions.html</loc>
   </url>
   <url>
+    <loc>https://nsystudy.kr/region.html</loc>
+  </url>
+  <url>
     <loc>https://nsystudy.kr/international.html</loc>
+  </url>
+  <url>
+    <loc>https://nsystudy.kr/international-detail.html</loc>
   </url>
   <url>
     <loc>https://nsystudy.kr/ged.html</loc>
   </url>
   <url>
+    <loc>https://nsystudy.kr/ged-detail.html</loc>
+  </url>
+  <url>
     <loc>https://nsystudy.kr/essay.html</loc>
+  </url>
+  <url>
+    <loc>https://nsystudy.kr/essay-region.html</loc>
   </url>
 </urlset>
