@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NSY Study">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f5fff"/>
+      <stop offset="1" stop-color="#2fb6ee"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bg)"/>
+  <path d="M18 42V22h6l10 12V22h6v20h-6L24 30v12z" fill="#ffffff"/>
+  <path d="M8 8h48a8 8 0 0 1 8 8v8H0v-8a8 8 0 0 1 8-8z" fill="url(#shine)"/>
+  <circle cx="51" cy="13" r="3" fill="#ffffff" opacity="0.95"/>
+</svg>

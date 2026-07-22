@@ -55,20 +55,45 @@ a {
 .brand {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  font-size: 1.15rem;
+  gap: 0.72rem;
+  font-size: 1.12rem;
   font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .brand-mark {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   color: white;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: linear-gradient(140deg, var(--primary), var(--secondary));
+  box-shadow: 0 10px 20px rgba(31, 95, 255, 0.28);
+  font-size: 0.98rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 7px;
+  width: 24px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  filter: blur(0.2px);
+}
+
+.brand > span:last-child {
+  color: #1d2a42;
+  font-weight: 900;
+  font-size: 2.02rem;
+  line-height: 1;
 }
 
 .nav-links {
@@ -510,6 +535,21 @@ h1 {
   .hero-badge {
     right: 14px;
     font-size: 0.75rem;
+  }
+
+  .brand {
+    font-size: 1.02rem;
+  }
+
+  .brand > span:last-child {
+    font-size: 1.58rem;
+  }
+
+  .brand-mark {
+    width: 39px;
+    height: 39px;
+    border-radius: 12px;
+    font-size: 0.86rem;
   }
 }
 
