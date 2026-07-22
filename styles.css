@@ -637,6 +637,52 @@ h1 {
 .tip-card h4 { margin: 0 0 0.4rem; font-size:1rem; }
 .tip-card p { margin: 0; color: var(--muted); font-size:0.95rem; }
 
+.region-focus-note {
+  margin: 0.9rem 0 0;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid #cddfff;
+  background: linear-gradient(135deg, #f7fbff, #edf5ff);
+  color: #2a3b57;
+}
+
+.keyword-section {
+  margin-top: 1.2rem;
+}
+
+.keyword-group {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+}
+
+.keyword-group h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+  color: var(--primary-dark);
+}
+
+.keyword-chip-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.keyword-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.36rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid #d8e6ff;
+  background: #f7fbff;
+  color: #28426d;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 /* Schedule table/card */
 .schedule-box { margin-top:1rem; }
 .schedule-table { width:100%; border-collapse:collapse; background:white; border-radius:10px; overflow:hidden; box-shadow:0 12px 30px rgba(15,23,42,0.04); }
@@ -650,6 +696,13 @@ h1 {
 @media (max-width:640px){
   .tip-cards { grid-template-columns: 1fr; }
   .schedule-table th, .schedule-table td { padding:0.7rem; }
+  .keyword-group {
+    padding: 0.85rem;
+  }
+
+  .keyword-chip {
+    font-size: 0.8rem;
+  }
 }
 
 /* Regions search-first layout */
