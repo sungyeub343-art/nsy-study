@@ -3,8 +3,48 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>검정고시 상세</title>
+    <title id="metaTitle">검정고시 과외 | NSY Study</title>
+    <meta id="metaDescription" name="description" content="검정고시 과외 상담. 영어, 수학, 국어 검정고시 준비를 위한 1:1 맞춤 수업을 제공합니다." />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link id="canonicalLink" rel="canonical" href="https://nsystudy.kr/ged-detail.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NSY Study" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta id="ogTitle" property="og:title" content="검정고시 과외 | NSY Study" />
+    <meta id="ogDescription" property="og:description" content="검정고시 과외 상담. 1:1 맞춤 수업을 제공합니다." />
+    <meta id="ogUrl" property="og:url" content="https://nsystudy.kr/ged-detail.html" />
+    <meta property="og:image" content="https://nsystudy.kr/data/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta id="twitterTitle" name="twitter:title" content="검정고시 과외 | NSY Study" />
+    <meta id="twitterDescription" name="twitter:description" content="검정고시 과외 상담. 010-2928-3614" />
+    <meta name="twitter:image" content="https://nsystudy.kr/data/og-cover.png" />
     <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json" id="breadcrumbSchema">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "홈",
+          "item": "https://nsystudy.kr/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "검정고시",
+          "item": "https://nsystudy.kr/ged.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "지역",
+          "item": "https://nsystudy.kr/ged-detail.html"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -22,21 +62,23 @@
 
     <main>
       <div class="container" style="padding:2rem 0;">
-        <a id="backToGedList" href="ged.html" style="color:var(--primary);font-weight:700;">← 검정고시 지역 목록으로 돌아가기</a>
+        <a id="backToList" href="ged.html" style="color:var(--primary);font-weight:700;">← 검정고시 지역 목록으로 돌아가기</a>
         <article class="article-card" style="margin-top:0.6rem;padding:1.4rem;border-radius:12px;border:1px solid var(--border);background:white;">
           <div class="article-meta">
             <span class="eyebrow">검정고시</span>
-            <h1 id="gedTitle"></h1>
+            <h1 id="regionTitle"></h1>
             <div id="metaLine" style="color:var(--muted)"></div>
           </div>
-          <img id="gedHero" src="ged-image-11.jpg" alt="검정고시 안내 이미지" style="width:min(560px,100%);height:auto;object-fit:contain;border-radius:10px;display:block;margin:0 auto 1rem;" />
-          <section id="gedSubregionSection" style="display:none;margin-bottom:1rem;">
-            <h2 id="gedSubregionTitle" style="margin:0 0 0.6rem;font-size:1.15rem;"></h2>
-            <p id="gedSubregionHelp" style="margin:0 0 0.8rem;color:var(--muted);"></p>
-            <div id="gedSubregionGrid" class="district-grid"></div>
+          <img id="heroImg" src="ged-image-11.jpg" alt="검정고시 안내 이미지" style="width:min(560px,100%);height:auto;object-fit:contain;border-radius:10px;display:block;margin:0 auto 1rem;" />
+          <section id="subregionSection" style="display:none;margin-bottom:1rem;">
+            <h2 id="subregionTitle" style="margin:0 0 0.6rem;font-size:1.15rem;"></h2>
+            <p id="subregionHelp" style="margin:0 0 0.8rem;color:var(--muted);"></p>
+            <div id="subregionGrid" class="district-grid"></div>
           </section>
-          <div id="gedContent"></div>
-          <div style="margin-top:1rem;"><a id="gedConsult" class="btn btn-primary" href="#">검정고시 상담 신청</a></div>
+          <div id="articleContent"></div>
+          <div style="margin-top:1rem;">
+            <a id="consultBtn" class="btn btn-primary" href="#">검정고시 상담 신청</a>
+          </div>
         </article>
       </div>
     </main>
@@ -47,7 +89,7 @@
       </div>
     </footer>
 
-    <script src="subregions-data.js"></script>
-    <script src="ged-detail.js"></script>
+    <script src="subregions-data.js?v=20260722a"></script>
+    <script src="ged-detail.js?v=20260722c"></script>
   </body>
 </html>
