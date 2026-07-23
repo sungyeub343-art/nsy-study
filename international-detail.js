@@ -1,138 +1,202 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
-// Sample school directory with curriculum keywords included for richer detail pages.
+function updateSchemaData(schoolName) {
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": `${schoolName} 국제학교 과외`,
+    "description": `${schoolName} 국제학교 학생들을 위한 영어, 수학, 과학 과외 상담 및 매칭 서비스`,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "NSY Study",
+      "url": "https://nsystudy.kr/",
+      "telephone": "+82-10-2928-3614",
+      "areaServed": "KR"
+    },
+    "areaServed": "KR",
+    "availableLanguage": "ko-KR"
+  };
+  
+  let schemaScript = document.getElementById('serviceSchema');
+  if (!schemaScript) {
+    schemaScript = document.createElement('script');
+    schemaScript.id = 'serviceSchema';
+    schemaScript.type = 'application/ld+json';
+    document.head.appendChild(schemaScript);
+  }
+  schemaScript.textContent = JSON.stringify(serviceSchema);
+}
+
+function updateMetaTags(schoolName, city) {
+  const pageTitle = `${schoolName} 국제학교 과외 | 커리큘럼 맞춤 상담`;
+  const pageDescription = `${schoolName} 국제학교 학생에게 맞는 영어·수학·과학 과외와 IB·AP·국제커리큘럼 대비 1:1 맞춤 수업을 안내합니다.`;
+  const canonicalUrl = `https://nsystudy.kr/international-detail.html?${new URLSearchParams(new URL(window.location).searchParams).toString()}`;
+  
+  document.title = pageTitle;
+  
+  const metaTitle = document.getElementById('metaTitle');
+  const metaDesc = document.getElementById('metaDescription');
+  const canonical = document.getElementById('canonicalLink');
+  const ogTitle = document.getElementById('ogTitle');
+  const ogDesc = document.getElementById('ogDescription');
+  const ogUrl = document.getElementById('ogUrl');
+  const twitterTitle = document.getElementById('twitterTitle');
+  const twitterDesc = document.getElementById('twitterDescription');
+  
+  if(metaTitle) metaTitle.textContent = pageTitle;
+  if(metaDesc) metaDesc.setAttribute('content', pageDescription);
+  if(canonical) canonical.setAttribute('href', canonicalUrl);
+  if(ogTitle) ogTitle.setAttribute('content', pageTitle);
+  if(ogDesc) ogDesc.setAttribute('content', pageDescription);
+  if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
+  if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
+  if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
+}
+
+// 학교 데이터 (간단히 유지)
 const schoolDb = {
-  'korean-foreign-school-seoul': {name:'한국외국인학교 (서울캠퍼스)', city:'서울', province:'서울특별시', desc:'서울에 위치한 대표적인 외국인학교로, 국제 커리큘럼과 다국적 학습 환경을 제공합니다.', keywords:['International Curriculum','English Immersion','IB Curriculum','Global Education','Critical Thinking','Project-Based Learning (PBL)']},
-  'korean-kent-school': {name:'한국켄트외국인학교', city:'서울', province:'서울특별시', desc:'영어권 교육과 국제적 교육 철학을 바탕으로 한 학교입니다.', keywords:['English Language Arts','Mathematics','Science','IB MYP','AP Courses','Debate','Public Speaking']},
-  'seoul-foreign-school': {name:'서울외국인학교', city:'서울', province:'서울특별시', desc:'전통 있는 외국인학교로 국제적 학습 경험과 다양한 선택과목이 특징입니다.', keywords:['English Literature','History','Global Studies','IB DP','CAS','Visual Arts','Computer Science']},
-  'seoul-dwight-school': {name:'서울드와이트외국인학교', city:'서울', province:'서울특별시', desc:'다양한 국제 교육과정과 학생 중심 학습 방식을 강조합니다.', keywords:['IB Diploma Programme','Theory of Knowledge','Extended Essay','Mathematics','Biology','Chemistry']},
-  'korea-foreign-school': {name:'코리아외국인학교', city:'서울', province:'서울특별시', desc:'기초 학문과 국제 커리큘럼을 함께 다루는 학교입니다.', keywords:['English Language Arts','Algebra','Geometry','Physics','Economics','Art & Design']},
-  'asia-pacific-international-school': {name:'아시아퍼시픽국제외국인학교', city:'서울', province:'서울특별시', desc:'아시아권 국제 교육 환경에 적합한 창의적·실용적 학습을 지향합니다.', keywords:['Project-Based Learning (PBL)','Robotics','Coding / Programming','Design Technology','Media Studies']},
-  'global-christian-school': {name:'지구촌기독외국인학교', city:'서울', province:'서울특별시', desc:'국제적 교육 철학과 기독교적 교육 가치를 함께 추구합니다.', keywords:['Humanities','Social Studies','English Immersion','Global Education','Music','Drama / Theater']},
-  'seoul-yongsan-international-school': {name:'서울용산국제학교', city:'서울', province:'서울특별시', desc:'다양한 국제학교형 교육법과 멀티문화 학습 환경이 장점입니다.', keywords:['IB PYP','IB MYP','Science','Environmental Science','Physical Education','World History']},
-  'dulwich-college-seoul': {name:'덜위치칼리지서울영국학교', city:'서울', province:'서울특별시', desc:'영국식 교육과정을 기반으로 한 국제학교입니다.', keywords:['A-Level Courses','Cambridge Curriculum','Mathematics','English Literature','Geography','Business Studies']},
-  'lycee-francais-de-seoul': {name:'서울프랑스학교 (Lycée Français de Séoul)', city:'서울', province:'서울특별시', desc:'프랑스식 교육과정을 중심으로 디테일한 학업 관리가 가능한 학교입니다.', keywords:['French Curriculum','Humanities','Science','Visual Arts','Public Speaking','Global Studies']},
-  'seoul-japanese-school': {name:'서울일본인학교', city:'서울', province:'서울특별시', desc:'일본식 교육과정과 국제적 협력 프로그램을 운영합니다.', keywords:['Mathematics','Science','English Immersion','Japanese Language','Social Studies','Music']},
-  'seoul-german-school': {name:'서울독일학교', city:'서울', province:'서울특별시', desc:'독일식 교육과정과 국제적 학습 기반이 특징입니다.', keywords:['Science','Mathematics','German Language','English Language Arts','Physics','Chemistry']},
-  'xavier-international-school': {name:'하비에르 국제학교', city:'서울', province:'서울특별시', desc:'다양한 국제 교육과정과 학생 맞춤형 학습을 지원합니다.', keywords:['IB Curriculum','AP Program','English Language Arts','Pre-Calculus','Statistics','Drama / Theater']},
-  'cheongna-dalton-school': {name:'청라달튼외국인학교', city:'인천', province:'인천광역시', desc:'청라에 위치해 있으며, 미국식 교육 스타일과 학생 중심 교육이 강점입니다.', keywords:['AP Biology','AP Chemistry','Math','English','Music','Physical Education']},
-  'gyeonggi-suwon-foreign-school': {name:'경기수원외국인학교', city:'수원', province:'경기도', desc:'수원 지역의 국제 학습 환경을 제공하는 외국인학교입니다.', keywords:['English Immersion','Global Studies','Science','Mathematics','Debate','Project-Based Learning (PBL)']},
-  'korean-foreign-school-pangyo': {name:'한국외국인학교 (판교캠퍼스)', city:'판교', province:'경기도', desc:'판교 지역의 국제학교 수요에 맞춘 교육적 접근이 가능합니다.', keywords:['IB MYP','English Language Arts','Social Studies','Computer Science','Coding / Programming']},
-  'pyeongtaek-christian-school': {name:'평택크리스천외국인학교', city:'평택', province:'경기도', desc:'기독교적 교육 철학과 국제적 학습 환경을 동시에 제공하는 학교입니다.', keywords:['Humanities','Science','English','Music','Drama / Theater','Physical Education']},
-  'incheon-hwa-gyo-school': {name:'인천화교학교', city:'인천', province:'인천광역시', desc:'다문화 학습과 국제적 소통 역량을 키우는 학교입니다.', keywords:['Chinese Language','Mathematics','English','Science','Social Studies','Art & Design']},
-  'busan-foreign-school': {name:'부산외국인학교', city:'부산', province:'부산광역시', desc:'부산에 위치한 외국인학교로 국제적 커리큘럼을 제공합니다.', keywords:['English Immersion','Global Education','Biology','Physics','Economics','Visual Arts']},
-  'busan-international-foreign-school': {name:'부산국제외국인학교', city:'부산', province:'부산광역시', desc:'국제 커리큘럼과 다양한 글로벌 활동이 특징입니다.', keywords:['IB Curriculum','AP Program','Mathematics','English Literature','Environmental Science','Media Studies']},
-  'gyeongnam-international-school': {name:'경남국제외국인학교', city:'경남', province:'부산광역시', desc:'경남 지역의 국제학교 수요에 맞춘 교육 환경을 제공합니다.', keywords:['International Curriculum','English Language Arts','Science','Social Studies','Robotics','Coding / Programming']},
-  'geoje-international-school': {name:'거제국제외국인학교', city:'거제', province:'부산광역시', desc:'거제 지역의 국제학교형 교육을 지원하는 학교입니다.', keywords:['English Immersion','Mathematics','Physics','Chemistry','Global Studies','Health Education']},
-  'daejeon-foreign-school': {name:'대전외국인학교', city:'대전', province:'대전광역시', desc:'대전 지역의 국제교육 니즈를 고려한 외국인학교입니다.', keywords:['IB Curriculum','English','Science','Social Studies','Music','Physical Education']},
-  'ulsan-hyundai-foreign-school': {name:'울산현대외국인학교', city:'울산', province:'울산광역시', desc:'울산의 산업 도시 특성에 맞는 실용적 교육이 가능한 학교입니다.', keywords:['Engineering','Mathematics','Science','Global Studies','Computer Science','Design Technology']},
-  'gwangju-international-school': {name:'광주국제외국인학교', city:'광주', province:'광주광역시', desc:'광주 지역에서 국제적인 교육과정을 찾는 학부모에게 적합합니다.', keywords:['English Immersion','Mathematics','Science','Humanities','Visual Arts','Debate']},
-  'daegu-hwa-gyo-high-school': {name:'한국대구화교중고등학교', city:'대구', province:'대구광역시', desc:'대구 지역의 화교학교로, 국제적 교육성과 전통 교육을 함께 이어갑니다.', keywords:['English Language Arts','Mathematics','Science','Humanities','Social Studies','Computer Science']},
-  'daegu-hwa-gyo-elementary-school': {name:'한국대구화교초등학교', city:'대구', province:'대구광역시', desc:'초등 과정에서 국제적 사고력과 언어 능력을 키우는 교육 환경입니다.', keywords:['English Immersion','Project-Based Learning (PBL)','Science','Mathematics','Art & Design']},
-  'chadwick-jeju': {name:'채드윅 송도국제학교 제주 캠퍼스', city:'제주', province:'제주특별자치도', desc:'제주에 위치한 대표적인 국제학교로, IB/해외 커리큘럼과 첨단 교육 환경이 강점입니다.', keywords:['IB Diploma Programme','IB MYP','AP Courses','Biology','Chemistry','Physics','Theater','Visual Arts']},
-  'nlcs-jeju': {name:'NLCS 제주 (North London Collegiate School Jeju)', city:'제주', province:'제주특별자치도', desc:'영국식 교육과정과 높은 학업 수준을 지향하는 국제학교입니다.', keywords:['A-Level Courses','English Literature','History','Mathematics','Science','Debate']},
-  'branksome-hall-asia': {name:'브랭섬홀 아시아', city:'제주', province:'제주특별자치도', desc:'제주에서 국제적 교육 경험과 글로벌 커뮤니티를 누릴 수 있는 학교입니다.', keywords:['IB Curriculum','English Immersion','Global Education','Critical Thinking','Creative Writing','Design Technology']},
-  'saint-johns-british-academy-jeju': {name:'세인트존스베리아카데미 제주', city:'제주', province:'제주특별자치도', desc:'영국식 교육 체계와 글로벌 교육 환경을 제공하는 학교입니다.', keywords:['Cambridge Curriculum','English Language Arts','Mathematics','Science','Geography','Drama / Theater']},
-  'kis-jeju': {name:'KIS 제주 (Korea International School Jeju)', city:'제주', province:'제주특별자치도', desc:'다국적 학생과 교직원, 다양한 국제 교육과정이 어우러진 학교입니다.', keywords:['IB Curriculum','AP Program','English Immersion','Global Studies','Business Studies','Robotics']},
-  'jeju-international-school': {name:'제주국제학교', city:'제주', province:'제주특별자치도', desc:'제주 지역의 국제학교 수요를 반영한 교육 프로그램을 운영합니다.', keywords:['International Curriculum','English Immersion','Science','Mathematics','Art & Design','Physical Education']}
+  'korean-foreign-school-seoul': {name:'한국외국인학교 (서울캠퍼스)', city:'서울', province:'서울특별시'},
+  'seoul-dwight-school': {name:'서울드와이트외국인학교', city:'서울', province:'서울특별시'},
+  'chadwick-jeju': {name:'채드윅 송도국제학교 제주 캠퍼스', city:'제주', province:'제주특별자치도'},
+  'nlcs-jeju': {name:'NLCS 제주', city:'제주', province:'제주특별자치도'},
 };
 
 document.addEventListener('DOMContentLoaded', ()=>{
   const params = new URLSearchParams(location.search);
-  const province = decodeParam(params.get('province')||'');
-  const city = decodeParam(params.get('city')||'');
   const school = decodeParam(params.get('school')||'');
   const schoolNameParam = decodeParam(params.get('name')||'');
 
-  const titleEl = document.getElementById('schoolTitle');
+  const titleEl = document.getElementById('regionTitle');
   const metaLine = document.getElementById('metaLine');
-  const hero = document.getElementById('schoolHero');
-  const content = document.getElementById('schoolContent');
-  const consult = document.getElementById('schoolConsult');
+  const hero = document.getElementById('heroImg');
+  const content = document.getElementById('articleContent');
+  const consult = document.getElementById('consultBtn');
 
-  const record = schoolDb[school] || {name: schoolNameParam || school || `${city} 국제학교`, desc:'학교 정보가 준비 중입니다.', keywords:['International Curriculum','English Immersion']};
+  const record = schoolDb[school] || {name: schoolNameParam || school || '국제학교'};
 
-  const keywords = record.keywords || [];
-  const hasEnglish = keywords.some(k => /English|ELA|Literature/i.test(k));
-  const hasMath = keywords.some(k => /(Mathematics|Algebra|Geometry|Calculus|Statistics)/i.test(k));
-  const hasIB = keywords.some(k => /IB/i.test(k));
-  const hasAP = keywords.some(k => /AP/i.test(k));
-  const hasAlgebra = keywords.some(k => /Algebra/i.test(k));
-  const hasGeometry = keywords.some(k => /Geometry/i.test(k));
-  const titleSuffix = '수학·영어과외 알지브라 지오메트리 IB AP';
-  titleEl.textContent = `${record.name} ${titleSuffix}`.trim();
+  titleEl.textContent = `${record.name} 과외`;
   metaLine.textContent = '국제학교 입학 및 교육과정 문의';
   hero.src = 'international-image-11.jpg?v=20260718phonefix';
+  
+  // Update meta tags for SEO
+  updateMetaTags(record.name, record.city);
+  
+  // Update schema data
+  updateSchemaData(record.name);
 
-  const keywordHtml = (record.keywords || []).map(k => `<span class="subject-badge" style="margin:0.2rem;display:inline-block">${k}</span>`).join('');
   content.innerHTML = `
-    <p style="color:var(--muted)">${record.desc}</p>
-    <h3 style="margin-top:1rem">대표 과목/프로그램 키워드</h3>
-    <div style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.45rem;">${keywordHtml}</div>
-
-    <h3 style="margin-top:1.4rem">국제학교 과외 커리큘럼</h3>
+    <p style="color:var(--muted)">${record.name} 학생들을 위한 맞춤 과외 서비스입니다.</p>
+    <h3 style="margin-top:1rem">국제학교 과외 커리큘럼</h3>
     <p style="color:var(--muted);margin-top:0.3rem;">기초부터 중급까지, 국제학교 수업 방식에 맞춘 단계별 학습 플랜입니다.</p>
     <div style="margin-top:0.8rem;display:grid;gap:0.7rem;">
       <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#f9f7ff;">
-        <strong>1단계 · 레벨 진단 (1주)</strong>
+        <strong>1단계 · 레벨 진단</strong>
         <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
-          <li>영어 레벨 테스트: Reading / Writing / Speaking / Listening</li>
-          <li>수학 개념 테스트: 기초 연산부터 응용까지</li>
-          <li>과목별 약점 분석 및 IB / AP 목표 확인</li>
+          <li>영어 레벨 테스트: Reading, Writing, Speaking, Listening</li>
+          <li>수학 개념 테스트</li>
+          <li>과목별 약점 분석 및 목표 확인</li>
         </ul>
       </div>
       <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#f7fcf3;">
-        <strong>2단계 · 영어 기본 강화 (2~4주)</strong>
+        <strong>2단계 · 영어 기본 강화</strong>
         <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
           <li>Reading Comprehension 지문 이해</li>
-          <li>Vocabulary 필수 어휘 500~1000개</li>
-          <li>Grammar / Writing Basic / Speaking Q&A</li>
+          <li>Vocabulary 어휘 학습</li>
+          <li>Grammar와 Writing 기초</li>
         </ul>
       </div>
       <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#fffdf1;">
-        <strong>3단계 · 국제학교 학습 방식 적응 (4~8주)</strong>
+        <strong>3단계 · 국제학교 수업 방식 적응</strong>
         <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
-          <li>Note-taking / Essay Writing 구조</li>
-          <li>Presentation / Critical Thinking</li>
-          <li>Group Discussion 토론 훈련</li>
+          <li>Note-taking과 Essay Writing 구조</li>
+          <li>Presentation과 Critical Thinking</li>
+          <li>Group Discussion 훈련</li>
         </ul>
       </div>
       <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#fff5f4;">
-        <strong>4단계 · 과목별 심화 학습 (8~12주)</strong>
+        <strong>4단계 · 과목별 심화 학습</strong>
         <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
-          <li>Math: Algebra / Geometry / Statistics / Word Problem</li>
-          <li>Science: Biology / Chemistry / Physics / Lab Report</li>
-          <li>Social Studies: World History / Geography / Essay 답안</li>
-        </ul>
-      </div>
-      <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#f8f2ff;">
-        <strong>5단계 · 시험 & 평가 대비</strong>
-        <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
-          <li>Quiz / Test 대비 문제풀이</li>
-          <li>IB / AP Mock Test 및 Essay 첨삭</li>
-          <li>Oral Exam / Speaking Test 준비</li>
-        </ul>
-      </div>
-      <div style="padding:0.9rem 1rem;border:1px solid var(--border);border-radius:10px;background:#fff8eb;">
-        <strong>6단계 · 고급 과정 (선택)</strong>
-        <ul style="margin:0.45rem 0 0 1.1rem;color:var(--muted);">
-          <li>IB Extended Essay / TOK 기초</li>
-          <li>AP Subject 집중 대비</li>
-          <li>대학 진학용 에세이 작성 지원</li>
+          <li>수학: Algebra, Geometry, Calculus 중급 이상</li>
+          <li>과학: Physics, Chemistry, Biology 개념 이해</li>
+          <li>AP/IB 수업 준비</li>
         </ul>
       </div>
     </div>
-
-    <h3 style="margin-top:1.4rem">학교 선택 팁</h3>
-    <ul style="color:var(--muted)">
-      <li>학교의 교육과정(IB/American/British 등)을 확인하세요.</li>
-      <li>학비/기숙사 여부, 통학 편의성을 확인하세요.</li>
-      <li>입학 절차 및 시험/면접 일정을 확인하세요.</li>
-    </ul>
   `;
 
+  // 과목별 설명
+  const subjects = [
+    {name: 'English', desc: 'Reading, Writing, Speaking 능력을 종합적으로 개발합니다. 국제학교 수업을 따라가는 데 필수입니다.', color: '#2d9b4a', bg: '#f7fcf3'},
+    {name: 'Mathematics', desc: 'Algebra, Geometry, Precalculus 등 국제커리큘럼 수학을 체계적으로 배웁니다.', color: '#6a33f6', bg: '#f9f7ff'},
+    {name: 'Science', desc: 'Physics, Chemistry, Biology를 영어로 학습합니다. 개념 이해가 핵심입니다.', color: '#e74c3c', bg: '#fff5f4'},
+    {name: 'Humanities', desc: '역사, 지리, 사회 교과를 비판적 사고와 함께 학습합니다.', color: '#f5a623', bg: '#fffdf1'},
+    {name: 'AP/IB Prep', desc: 'Advanced Placement 또는 International Baccalaureate 시험 대비 수업입니다.', color: '#3498db', bg: '#ecf8ff'}
+  ];
+  let subjectHtml = `<h2 style="margin-top:2rem">📖 과목별 수업 안내</h2>`;
+  subjects.forEach(s => {
+    subjectHtml += `<div style="background:${s.bg};padding:1.2rem;border-radius:10px;margin:1rem 0;border-left:4px solid ${s.color};"><h3 style="color:${s.color};font-weight:700;margin:0 0 0.5rem;">${s.name}</h3><p style="color:#555;margin:0;">${s.desc}</p></div>`;
+  });
+  content.innerHTML += subjectHtml;
+
+  // 교사 정보
+  let teacherHtml = `<h2 style="margin-top:2rem">👨‍🏫 우리 선생님들</h2>
+    <p style="color:var(--muted);margin-bottom:1.5rem;">NSY Study의 국제학교 전문 교사 기준:</p>
+    <ul style="color:#555;line-height:1.8;">
+      <li>✓ 국제학교 또는 해외 교육 경험 보유</li>
+      <li>✓ 영어 모국어 수준 또는 완전 능숙</li>
+      <li>✓ 국제 커리큘럼(IB, AP, Cambridge) 숙지</li>
+      <li>✓ 학생별 맞춤 학습 계획 수립</li>
+      <li>✓ 정기 진도 점검 및 학부모 상담</li>
+    </ul>
+    <p style="color:var(--muted);margin-top:1.5rem;"><strong>국제학교 맞춤 과외 프로세스</strong></p>
+    <ol style="color:#555;line-height:1.8;">
+      <li>학생 입학 시험 준비 또는 현 수준 진단</li>
+      <li>과목별 선생님 추천</li>
+      <li>무료 체험 수업 (1회 60-90분)</li>
+      <li>학생·부모·선생님 상담 후 시작</li>
+      <li>정기 평가 및 진도 관리</li>
+    </ol>`;
+  content.innerHTML += teacherHtml;
+
+  // FAQ
+  const faqs = [
+    {q: '국제학교 입시에 과외가 필수인가요?', a: '필수는 아니지만, 입학 시험 준비 시 전문 과외가 매우 도움됩니다. 특히 영어와 수학은 강화하는 것이 좋습니다.'},
+    {q: '영어 모국어 선생님이 필요한가요?', a: '영어 유창한 선생님과 한국인 선생님 모두 장점이 있습니다. 학생의 목표와 수준에 따라 선택하실 수 있습니다.'},
+    {q: 'AP/IB 대비는 가능한가요?', a: '네, 가능합니다. AP/IB 경험이 있는 선생님들이 준비를 도와드립니다.'},
+    {q: '온라인과 오프라인 중 어디가 낫나요?', a: '효율성은 온라인이 높고, 집중도는 오프라인이 높습니다. 학생 성향에 따라 선택하세요.'},
+    {q: '국제학교 적응 기간은 얼마나 되나요?', a: '개인차가 있지만, 1-3개월이면 학교 수업을 따라가는 데 무리가 없습니다.'},
+    {q: '비용은 어느 정도인가요?', a: '월 80-150만원 정도입니다. 과목, 선생님 경력, 수업 시간에 따라 다릅니다.'}
+  ];
+  let faqHtml = `<h2 style="margin-top:2rem">❓ 자주 묻는 질문 (FAQ)</h2>`;
+  faqs.forEach((faq, idx) => {
+    faqHtml += `<div style="background:#f5f5f5;padding:1.2rem;border-radius:10px;margin:1rem 0;"><h4 style="color:#1a1a1a;margin:0 0 0.6rem;font-weight:700;">Q${idx+1}. ${faq.q}</h4><p style="color:#555;margin:0;line-height:1.6;">${faq.a}</p></div>`;
+  });
+  content.innerHTML += faqHtml;
+
+  // 다른 서비스 안내 섹션
+  let relatedHtml = `<div style="background:#f0f8ff;margin:2rem 0;padding:1.5rem;border-radius:10px;border-left:4px solid #3498db;">
+    <h3 style="margin-top:0;color:#1a1a1a;">📚 다른 과외 서비스도 확인하세요</h3>
+    <p style="color:#666;margin:0.5rem 0 1rem;">자녀의 목표에 맞는 다양한 과외 프로그램을 안내합니다.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+      <a href="regions.html" style="padding:1.2rem;background:white;border:1px solid #3498db;border-radius:8px;text-decoration:none;color:#333;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(52, 152, 219, 0.2)'" onmouseout="this.style.boxShadow='none'">
+        <h4 style="margin:0 0 0.5rem;color:#3498db;font-weight:700;">📖 전국과외</h4>
+        <p style="margin:0;font-size:0.9rem;color:#666;">수학·영어 기초부터 심화까지</p>
+      </a>
+      <a href="ged.html" style="padding:1.2rem;background:white;border:1px solid #6a33f6;border-radius:8px;text-decoration:none;color:#333;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(106, 51, 246, 0.2)'" onmouseout="this.style.boxShadow='none'">
+        <h4 style="margin:0 0 0.5rem;color:#6a33f6;font-weight:700;">🎓 검정고시</h4>
+        <p style="margin:0;font-size:0.9rem;color:#666;">중·고졸 학력 인정 시험</p>
+      </a>
+      <a href="essay.html" style="padding:1.2rem;background:white;border:1px solid #f5a623;border-radius:8px;text-decoration:none;color:#333;transition:all 0.3s;" onmouseover="this.style.boxShadow='0 4px 12px rgba(245, 166, 35, 0.2)'" onmouseout="this.style.boxShadow='none'">
+        <h4 style="margin:0 0 0.5rem;color:#f5a623;font-weight:700;">📝 논술</h4>
+        <p style="margin:0;font-size:0.9rem;color:#666;">대학 입시 논술 전형</p>
+      </a>
+    </div>
+  </div>`;
+  content.innerHTML += relatedHtml;
+
+  // Consult button
   const telNumber = '+821029283614';
   consult.href = `tel:${telNumber}`;
-  consult.textContent = '전화로 문의하기';
-  consult.setAttribute('data-mailto', `mailto:hello@nsystudy.kr?subject=${encodeURIComponent(record.name+' 문의')}`);
+  consult.textContent = '전화로 상담하기';
+  consult.setAttribute('data-mailto', `mailto:hello@nsystudy.kr?subject=${encodeURIComponent(record.name + ' 과외 상담 신청')}`);
 });
