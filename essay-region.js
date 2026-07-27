@@ -1,5 +1,29 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
+function buildCanonicalUrl(pageName, keys){
+  const params = new URLSearchParams(window.location.search);
+  const normalized = new URLSearchParams();
+
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if(value) normalized.set(key, value);
+  });
+
+  const query = normalized.toString();
+  return query ? `https://nsystudy.kr/${pageName}?${query}` : `https://nsystudy.kr/${pageName}`;
+}
+
+function upsertJsonLdScript(id, data){
+  let script = document.getElementById(id);
+  if(!script){
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+
 function updateSchemaData(regionText) {
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -16,21 +40,14 @@ function updateSchemaData(regionText) {
     "areaServed": "KR",
     "availableLanguage": "ko-KR"
   };
-  
-  let schemaScript = document.getElementById('serviceSchema');
-  if (!schemaScript) {
-    schemaScript = document.createElement('script');
-    schemaScript.id = 'serviceSchema';
-    schemaScript.type = 'application/ld+json';
-    document.head.appendChild(schemaScript);
-  }
-  schemaScript.textContent = JSON.stringify(serviceSchema);
+
+  upsertJsonLdScript('serviceSchema', serviceSchema);
 }
 
 function updateMetaTags(regionText, essayType = '논술') {
   const pageTitle = `${regionText} ${essayType} 과외 | 대학 입시 맞춤 상담`;
   const pageDescription = `${regionText}에서 수리논술과 인문논술 준비를 고민 중이라면, 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요.`;
-  const canonicalUrl = `https://nsystudy.kr/essay-region.html?${new URLSearchParams(new URL(window.location).searchParams).toString()}`;
+  const canonicalUrl = buildCanonicalUrl('essay-region.html', ['province', 'city', 'town']);
   
   document.title = pageTitle;
   
@@ -51,6 +68,45 @@ function updateMetaTags(regionText, essayType = '논술') {
   if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
+
+  upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "논술",
+        "item": "https://nsystudy.kr/essay.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": regionText,
+        "item": canonicalUrl
+      }
+    ]
+  });
+
+  upsertJsonLdScript('webPageSchema', {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": canonicalUrl,
+    "inLanguage": "ko-KR",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "NSY Study",
+      "url": "https://nsystudy.kr/"
+    }
+  });
 }
 
 function buildEssayDetailUrl(province, city, town){
@@ -121,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   titleEl.textContent = `${placeText} 논술 과외 안내`;
   metaLine.textContent = '대학 입시 논술 전형 무료 상담';
-  hero.src = 'essay-image-11.jpg';
+  hero.src = 'tutoring-landing-11.jpg';
   
   // Update meta tags for SEO
   updateMetaTags(placeText, '논술');

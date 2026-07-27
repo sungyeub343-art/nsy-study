@@ -41,6 +41,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
+    <link rel="preload" as="image" href="tutoring-landing-11.jpg" fetchpriority="high" />
     <link rel="stylesheet" href="styles.css" />
     <script type="application/ld+json">
     {
@@ -87,6 +88,68 @@
       ]
     }
     </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "NSY Study",
+      "url": "https://nsystudy.kr/",
+      "inLanguage": "ko-KR",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://nsystudy.kr/regions.html?query={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "무료 상담은 정말 비용이 없나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네. 학생의 학년, 목표, 과목, 희망 수업 방식(방문·화상)을 확인하는 1차 상담은 무료로 진행됩니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "선생님 매칭까지 얼마나 걸리나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "일반적으로 상담 후 1~3일 내에 과목·지역·성향에 맞는 선생님 후보를 안내해드립니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "방문 수업과 화상 수업을 함께 진행할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "가능합니다. 시험기간이나 이동 동선에 맞춰 방문과 화상을 혼합한 형태로 수업 일정을 설계할 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "국제학교·검정고시·논술도 상담 가능한가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네. 국제학교 커리큘럼(IB/AP/IGCSE), 검정고시, 대학 논술 전형까지 목표별 맞춤 상담이 가능합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "체험 수업 후 선생님 변경도 가능한가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네. 체험 수업 이후 학생과 맞지 않는 경우 과목과 성향에 맞춰 재매칭을 도와드립니다."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -103,6 +166,7 @@
           <a href="#about">서비스 소개</a>
           <a href="#process">진행 방식</a>
           <a href="#reviews">후기</a>
+          <a href="#faq">FAQ</a>
           <a href="#contact">무료 상담</a>
         </nav>
       </div>
@@ -147,8 +211,8 @@
 
           <div class="hero-visual" aria-hidden="true">
             <div class="hero-photo-stack">
-              <img class="hero-photo-main" src="tutoring-landing-11.jpg" alt="" loading="eager" />
-              <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" />
+              <img class="hero-photo-main" src="tutoring-landing-11.jpg" alt="" loading="eager" decoding="async" fetchpriority="high" width="936" height="340" />
+              <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" decoding="async" width="1000" height="750" />
               <div class="hero-badge hero-badge-top">오늘 상담 가능</div>
               <div class="hero-badge hero-badge-bottom">내신 · 수능 · 국제학교 · 검정고시</div>
             </div>
@@ -228,15 +292,15 @@
           </div>
           <div class="review-photo-grid" aria-label="교육 관련 수업 사진">
             <figure class="review-photo-card">
-              <img src="review-photo-1.jpg?t=20260721120000" alt="1대1 맞춤 과외 상담과 수업 안내 장면" loading="lazy" />
+              <img src="review-photo-1.jpg?t=20260721120000" alt="1대1 맞춤 과외 상담과 수업 안내 장면" loading="lazy" decoding="async" width="1000" height="750" />
               <figcaption>맞춤 과외 시작 안내</figcaption>
             </figure>
             <figure class="review-photo-card">
-              <img src="review-photo-2.jpg?t=20260721120000" alt="검정고시 대비 학습을 진행하는 수업 장면" loading="lazy" />
+              <img src="review-photo-2.jpg?t=20260721120000" alt="검정고시 대비 학습을 진행하는 수업 장면" loading="lazy" decoding="async" width="683" height="512" />
               <figcaption>검정고시 맞춤 수업</figcaption>
             </figure>
             <figure class="review-photo-card">
-              <img src="review-photo-3.jpg?t=20260721120000" alt="국제학교 커리큘럼을 반영한 학습 장면" loading="lazy" />
+              <img src="review-photo-3.jpg?t=20260721120000" alt="국제학교 커리큘럼을 반영한 학습 장면" loading="lazy" decoding="async" width="683" height="512" />
               <figcaption>국제학교 과정 대비</figcaption>
             </figure>
           </div>
@@ -311,6 +375,37 @@
         </div>
       </section>
 
+      <section class="section section-light" id="faq">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">자주 묻는 질문</p>
+            <h2>상담 전에 가장 많이 물어보시는 질문입니다.</h2>
+          </div>
+          <div class="review-grid">
+            <article class="review-card">
+              <h3>무료 상담은 정말 비용이 없나요?</h3>
+              <p>네. 학생의 학년, 목표, 과목, 희망 수업 방식(방문·화상)을 확인하는 1차 상담은 무료로 진행됩니다.</p>
+            </article>
+            <article class="review-card">
+              <h3>선생님 매칭까지 얼마나 걸리나요?</h3>
+              <p>일반적으로 상담 후 1~3일 내에 과목·지역·성향에 맞는 선생님 후보를 안내해드립니다.</p>
+            </article>
+            <article class="review-card">
+              <h3>방문 수업과 화상 수업을 함께 진행할 수 있나요?</h3>
+              <p>가능합니다. 시험기간이나 이동 동선에 맞춰 방문과 화상을 혼합한 형태로 수업 일정을 설계할 수 있습니다.</p>
+            </article>
+            <article class="review-card">
+              <h3>국제학교·검정고시·논술도 상담 가능한가요?</h3>
+              <p>네. 국제학교 커리큘럼(IB/AP/IGCSE), 검정고시, 대학 논술 전형까지 목표별 맞춤 상담이 가능합니다.</p>
+            </article>
+            <article class="review-card">
+              <h3>체험 수업 후 선생님 변경도 가능한가요?</h3>
+              <p>네. 체험 수업 이후 학생과 맞지 않는 경우 과목과 성향에 맞춰 재매칭을 도와드립니다.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="section cta-section" id="contact">
         <div class="container cta-box">
           <div>
@@ -329,6 +424,6 @@
         <a href="#top">맨 위로</a>
       </div>
     </footer>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
   </body>
 </html>

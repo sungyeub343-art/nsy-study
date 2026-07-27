@@ -137,6 +137,16 @@ function normalizeText(value){
   return (value || '').toString().trim().toLowerCase();
 }
 
+function debounce(fn, delay){
+  let timer = null;
+  return (...args) => {
+    if(timer){
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
 function getProvinceLabel(province){
   if(province === '서울특별시') return '서울';
   if(province === '인천광역시') return '인천';
@@ -263,7 +273,7 @@ function initIntlUI(data){
     searchResults.appendChild(list);
   }
 
-  searchInput.addEventListener('input', () => {
+  const onSearchInput = debounce(() => {
     const q = normalizeText(searchInput.value);
     if(!q){
       searchResults.innerHTML = '';
@@ -272,7 +282,9 @@ function initIntlUI(data){
 
     const filtered = flattened.filter((row) => row.keyword.includes(q));
     renderSearchResults(filtered);
-  });
+  }, 120);
+
+  searchInput.addEventListener('input', onSearchInput);
 
   searchInput.addEventListener('keydown', (event) => {
     if(event.key !== 'Enter') return;

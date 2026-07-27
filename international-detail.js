@@ -1,5 +1,29 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
+function buildCanonicalUrl(pageName, keys){
+  const params = new URLSearchParams(window.location.search);
+  const normalized = new URLSearchParams();
+
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if(value) normalized.set(key, value);
+  });
+
+  const query = normalized.toString();
+  return query ? `https://nsystudy.kr/${pageName}?${query}` : `https://nsystudy.kr/${pageName}`;
+}
+
+function upsertJsonLdScript(id, data){
+  let script = document.getElementById(id);
+  if(!script){
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+
 function updateSchemaData(schoolName) {
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -16,21 +40,14 @@ function updateSchemaData(schoolName) {
     "areaServed": "KR",
     "availableLanguage": "ko-KR"
   };
-  
-  let schemaScript = document.getElementById('serviceSchema');
-  if (!schemaScript) {
-    schemaScript = document.createElement('script');
-    schemaScript.id = 'serviceSchema';
-    schemaScript.type = 'application/ld+json';
-    document.head.appendChild(schemaScript);
-  }
-  schemaScript.textContent = JSON.stringify(serviceSchema);
+
+  upsertJsonLdScript('serviceSchema', serviceSchema);
 }
 
 function updateMetaTags(schoolName, city) {
   const pageTitle = `${schoolName} 국제학교 과외 | 커리큘럼 맞춤 상담`;
   const pageDescription = `${schoolName} 국제학교 학생에게 맞는 영어·수학·과학 과외와 IB·AP·국제커리큘럼 대비 1:1 맞춤 수업을 안내합니다.`;
-  const canonicalUrl = `https://nsystudy.kr/international-detail.html?${new URLSearchParams(new URL(window.location).searchParams).toString()}`;
+  const canonicalUrl = buildCanonicalUrl('international-detail.html', ['school', 'name']);
   
   document.title = pageTitle;
   
@@ -51,6 +68,45 @@ function updateMetaTags(schoolName, city) {
   if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
+
+  upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "국제학교",
+        "item": "https://nsystudy.kr/international.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": schoolName,
+        "item": canonicalUrl
+      }
+    ]
+  });
+
+  upsertJsonLdScript('webPageSchema', {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": canonicalUrl,
+    "inLanguage": "ko-KR",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "NSY Study",
+      "url": "https://nsystudy.kr/"
+    }
+  });
 }
 
 // 학교 데이터 (간단히 유지)

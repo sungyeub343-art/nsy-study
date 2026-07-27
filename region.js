@@ -16,51 +16,9 @@ function buildRegionUrl(province, city, town){
   return buildPageUrl('region.html', params);
 }
 
-// 지역 데이터 포함
-const subRegionsData = {
-  "서울특별시": {
-    "강남구": ["삼성동", "강남동", "논현동", "압구정동", "신사동", "서초동", "방배동", "양재동", "도곡동"],
-    "강동구": ["성내동", "암사동", "상일동", "고덕동", "천호동", "성자동"],
-    "강북구": ["수유동", "인수동", "미아동", "번동"],
-    "강서구": ["화곡동", "등촌동", "마곡동", "발산동", "가양동"],
-    "관악구": ["봉천동", "신림동", "인헌동", "조원동"],
-    "광진구": ["중곡동", "능동", "자양동", "광장동", "구의동"],
-    "구로구": ["구로동", "고척동", "개봉동", "오류동", "궁동"],
-    "금천구": ["독산동", "가산동"],
-    "노원구": ["상계동", "중계동", "하계동", "월계동", "공릉동", "상수동"],
-    "도봉구": ["방학동", "쌍문동", "창동", "도봉동"],
-    "동대문구": ["제기동", "용두동", "신설동", "이문동", "전농동", "답십리동", "장안동"],
-    "동작구": ["노량진동", "상도동", "사당동", "흑석동"],
-    "마포구": ["망원동", "서강동", "합정동", "상수동", "마포동"],
-    "서대문구": ["충현동", "현저동", "대현동", "신촌동", "연희동"],
-    "서초구": ["서초동", "방배동", "양재동", "우면동"],
-    "성동구": ["행당동", "응봉동", "금호동", "성수동", "송정동"],
-    "성북구": ["길음동", "석관동", "안암동", "종로5가동", "정릉동"],
-    "송파구": ["문정동", "장지동", "삼전동", "가락동", "잠실동", "신천동"],
-    "양천구": ["목동", "신정동"],
-    "영등포구": ["영등포동", "대방동", "여의도동", "당산동", "도림동"],
-    "용산구": ["이태원동", "한남동", "원효로동", "청파동"],
-    "은평구": ["불광동", "녹번동", "응암동", "대조동", "수색동"],
-    "종로구": ["청계천로", "종로1-6가", "이화동", "명동", "창신동"],
-    "중구": ["중림동", "만리동", "황학동", "정동", "을지로동"],
-    "중랑구": ["망우동", "상봉동", "신내동", "중화동"]
-  },
-  "부산광역시": {
-    "중구": ["중앙동", "동광동", "대청동", "보수동", "부평동"],
-    "서구": ["동대신동", "서대신동", "부용동", "부민동"],
-    "동구": ["초량동", "수정동", "좌천동", "범일동"],
-    "영도구": ["남항동", "영선동", "신선동", "봉래동"],
-    "부산진구": ["부전동", "연지동", "초읍동", "양정동"],
-    "동래구": ["명륜동", "온천동", "사직동", "안락동"],
-    "남구": ["대연동", "용호동", "용당동", "문현동"],
-    "북구": ["구포동", "금곡동", "화명동", "덕천동"],
-    "해운대구": ["우동", "중동", "좌동", "송정동"],
-    "사하구": ["괴정동", "당리동", "하단동", "신평동"]
-  }
-};
-
 function getSubRegions(province, city){
-  const provMap = subRegionsData[province] || {};
+  const root = window.subRegionsData || {};
+  const provMap = root[province] || {};
   return provMap[city] || [];
 }
 
@@ -83,6 +41,30 @@ function formatDate(){
   return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
 }
 
+function buildCanonicalUrl(pageName, keys){
+  const params = new URLSearchParams(window.location.search);
+  const normalized = new URLSearchParams();
+
+  keys.forEach((key) => {
+    const value = params.get(key);
+    if(value) normalized.set(key, value);
+  });
+
+  const query = normalized.toString();
+  return query ? `https://nsystudy.kr/${pageName}?${query}` : `https://nsystudy.kr/${pageName}`;
+}
+
+function upsertJsonLdScript(id, data){
+  let script = document.getElementById(id);
+  if(!script){
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+
 function updateSchemaData(placeText) {
   const serviceSchema = {
     "@context": "https://schema.org",
@@ -99,21 +81,14 @@ function updateSchemaData(placeText) {
     "areaServed": "KR",
     "availableLanguage": "ko-KR"
   };
-  
-  let schemaScript = document.getElementById('serviceSchema');
-  if (!schemaScript) {
-    schemaScript = document.createElement('script');
-    schemaScript.id = 'serviceSchema';
-    schemaScript.type = 'application/ld+json';
-    document.head.appendChild(schemaScript);
-  }
-  schemaScript.textContent = JSON.stringify(serviceSchema);
+
+  upsertJsonLdScript('serviceSchema', serviceSchema);
 }
 
 function updateMetaTags(placeText, hasTown, city) {
   const pageTitle = `${placeText} 수학·영어 과외 | 지역 맞춤 학습 상담`;
   const pageDescription = `${placeText} 초등·중등·고등 과외 상담. 내신, 수능, 수행평가, 자기주도학습까지 1:1 맞춤 커리큘럼으로 방문·화상 수업을 안내해드립니다.`;
-  const canonicalUrl = `https://nsystudy.kr/region.html?${new URLSearchParams(new URL(window.location).searchParams).toString()}`;
+  const canonicalUrl = buildCanonicalUrl('region.html', ['province', 'city', 'town']);
   const pageKeywords = `${placeText} 과외, 초등 과외, 중등 과외, 고등 과외, 수학 과외, 영어 과외, 국어 과외, 과학 과외, 사회 과외, 방문 과외, 화상 과외, 1:1 과외, 학습관리, 내신, 수능`;
   
   // Update document title
@@ -145,6 +120,45 @@ function updateMetaTags(placeText, hasTown, city) {
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
   if(keywordsMeta) keywordsMeta.setAttribute('content', pageKeywords);
+
+  upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "전국과외",
+        "item": "https://nsystudy.kr/regions.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": placeText,
+        "item": canonicalUrl
+      }
+    ]
+  });
+
+  upsertJsonLdScript('webPageSchema', {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": pageTitle,
+    "description": pageDescription,
+    "url": canonicalUrl,
+    "inLanguage": "ko-KR",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "NSY Study",
+      "url": "https://nsystudy.kr/"
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
