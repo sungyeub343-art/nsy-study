@@ -41,7 +41,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="preload" as="image" href="tutoring-landing-11.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="tutoring-landing-11.avif" type="image/avif" fetchpriority="high" />
     <link rel="stylesheet" href="styles.css" />
     <script type="application/ld+json">
     {
@@ -211,8 +211,16 @@
 
           <div class="hero-visual" aria-hidden="true">
             <div class="hero-photo-stack">
-              <img class="hero-photo-main" src="tutoring-landing-11.jpg" alt="" loading="eager" decoding="async" fetchpriority="high" width="936" height="340" />
-              <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" decoding="async" width="1000" height="750" />
+              <picture>
+                <source srcset="tutoring-landing-11.avif" type="image/avif" />
+                <source srcset="tutoring-landing-11.webp" type="image/webp" />
+                <img class="hero-photo-main" src="tutoring-landing-11.jpg" alt="" loading="eager" decoding="async" fetchpriority="high" width="936" height="340" />
+              </picture>
+              <picture>
+                <source srcset="review-photo-1.avif" type="image/avif" />
+                <source srcset="review-photo-1.webp" type="image/webp" />
+                <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" decoding="async" width="1000" height="750" />
+              </picture>
               <div class="hero-badge hero-badge-top">오늘 상담 가능</div>
               <div class="hero-badge hero-badge-bottom">내신 · 수능 · 국제학교 · 검정고시</div>
             </div>
@@ -292,15 +300,27 @@
           </div>
           <div class="review-photo-grid" aria-label="교육 관련 수업 사진">
             <figure class="review-photo-card">
-              <img src="review-photo-1.jpg?t=20260721120000" alt="1대1 맞춤 과외 상담과 수업 안내 장면" loading="lazy" decoding="async" width="1000" height="750" />
+              <picture>
+                <source srcset="review-photo-1.avif" type="image/avif" />
+                <source srcset="review-photo-1.webp" type="image/webp" />
+                <img src="review-photo-1.jpg?t=20260721120000" alt="1대1 맞춤 과외 상담과 수업 안내 장면" loading="lazy" decoding="async" width="1000" height="750" />
+              </picture>
               <figcaption>맞춤 과외 시작 안내</figcaption>
             </figure>
             <figure class="review-photo-card">
-              <img src="review-photo-2.jpg?t=20260721120000" alt="검정고시 대비 학습을 진행하는 수업 장면" loading="lazy" decoding="async" width="683" height="512" />
+              <picture>
+                <source srcset="review-photo-2.avif" type="image/avif" />
+                <source srcset="review-photo-2.webp" type="image/webp" />
+                <img src="review-photo-2.jpg?t=20260721120000" alt="검정고시 대비 학습을 진행하는 수업 장면" loading="lazy" decoding="async" width="683" height="512" />
+              </picture>
               <figcaption>검정고시 맞춤 수업</figcaption>
             </figure>
             <figure class="review-photo-card">
-              <img src="review-photo-3.jpg?t=20260721120000" alt="국제학교 커리큘럼을 반영한 학습 장면" loading="lazy" decoding="async" width="683" height="512" />
+              <picture>
+                <source srcset="review-photo-3.avif" type="image/avif" />
+                <source srcset="review-photo-3.webp" type="image/webp" />
+                <img src="review-photo-3.jpg?t=20260721120000" alt="국제학교 커리큘럼을 반영한 학습 장면" loading="lazy" decoding="async" width="683" height="512" />
+              </picture>
               <figcaption>국제학교 과정 대비</figcaption>
             </figure>
           </div>

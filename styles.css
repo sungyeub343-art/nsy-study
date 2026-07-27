@@ -244,6 +244,11 @@ h1 {
   box-shadow: 0 26px 64px rgba(31, 95, 255, 0.14);
 }
 
+.hero-photo-stack picture,
+.review-photo-card picture {
+  display: block;
+}
+
 .hero-photo-main {
   display: block;
   width: 100%;
