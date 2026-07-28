@@ -1,15 +1,111 @@
-const regions = [
-  { province: '서울특별시', city: '강남구', math: 42, english: 28, link: '#' },
-  { province: '서울특별시', city: '서초구', math: 18, english: 12, link: '#' },
-  { province: '경기도', city: '수원시', math: 22, english: 16, link: '#' },
-  { province: '경기도', city: '성남시', math: 15, english: 20, link: '#' },
-  { province: '부산광역시', city: '해운대구', math: 9, english: 7, link: '#' },
-  { province: '대전광역시', city: '유성구', math: 6, english: 4, link: '#' },
-  { province: '제주특별자치도', city: '제주시', math: 4, english: 3, link: '#' }
+const REGION_CACHE_KEY = 'nsy_regions_v1';
+const HOME_FEATURED_LIMIT = 20;
+const SEARCH_RESULT_LIMIT = 80;
+
+const fallbackRegions = [
+  { province: '서울특별시', cities: ['강남구', '서초구'] },
+  { province: '경기도', cities: ['수원시', '성남시'] },
+  { province: '부산광역시', cities: ['해운대구'] },
+  { province: '대전광역시', cities: ['유성구'] },
+  { province: '제주특별자치도', cities: ['제주시'] }
 ];
 
-function renderRegions(list) {
+let regions = [];
+
+function readCachedRegions() {
+  try {
+    const raw = window.localStorage.getItem(REGION_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function writeCachedRegions(data) {
+  try {
+    window.localStorage.setItem(REGION_CACHE_KEY, JSON.stringify(data));
+  } catch (e) {
+    // Ignore private mode/quota errors.
+  }
+}
+
+function buildPageUrl(pageName, query) {
+  const path = window.location.pathname;
+  const basePath = path.endsWith('/')
+    ? path
+    : path.includes('.')
+      ? path.slice(0, path.lastIndexOf('/') + 1)
+      : `${path}/`;
+  return `${basePath}${pageName}?${query.toString()}`;
+}
+
+function buildRegionUrl(province, city) {
+  const params = new URLSearchParams({ province, city });
+  return buildPageUrl('region.html', params);
+}
+
+function flattenRegions(data) {
+  const rows = [];
+  data.forEach((prov) => {
+    (prov.cities || []).forEach((city) => {
+      rows.push({
+        province: prov.province,
+        city,
+        link: buildRegionUrl(prov.province, city)
+      });
+    });
+  });
+  return rows;
+}
+
+function debounce(fn, delay) {
+  let timer = null;
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+function buildFeaturedRegions(rows, maxCount) {
+  const byProvince = rows.reduce((acc, row) => {
+    if (!acc[row.province]) {
+      acc[row.province] = [];
+    }
+    acc[row.province].push(row);
+    return acc;
+  }, {});
+
+  const provinces = Object.keys(byProvince);
+  const featured = [];
+  let depth = 0;
+
+  while (featured.length < maxCount) {
+    let addedInRound = 0;
+    provinces.forEach((province) => {
+      const next = byProvince[province][depth];
+      if (next && featured.length < maxCount) {
+        featured.push(next);
+        addedInRound += 1;
+      }
+    });
+
+    if (addedInRound === 0) {
+      break;
+    }
+    depth += 1;
+  }
+
+  return featured;
+}
+
+function renderRegions(list, meta = {}) {
   const container = document.getElementById('regionsList');
+  if (!container) return;
+
   container.innerHTML = '';
 
   if (list.length === 0) {
@@ -17,64 +113,117 @@ function renderRegions(list) {
     return;
   }
 
-  // Group by province
-  const byProvince = list.reduce((acc, r) => {
-    acc[r.province] = acc[r.province] || [];
-    acc[r.province].push(r);
+  const byProvince = list.reduce((acc, row) => {
+    if (!acc[row.province]) {
+      acc[row.province] = [];
+    }
+    acc[row.province].push(row);
     return acc;
   }, {});
 
+  const fragment = document.createDocumentFragment();
   Object.keys(byProvince).forEach((prov) => {
     const header = document.createElement('div');
     header.className = 'province-header';
     header.textContent = prov;
-    container.appendChild(header);
+    fragment.appendChild(header);
 
-    const group = byProvince[prov];
-    group.forEach((r) => {
+    byProvince[prov].forEach((row) => {
       const card = document.createElement('article');
       card.className = 'region-card';
 
       const title = document.createElement('h4');
-      title.textContent = r.city;
+      title.textContent = row.city;
 
       const meta = document.createElement('div');
       meta.className = 'region-meta';
-      meta.innerHTML = `<span class="subject-badge">수학 ${r.math}</span><span class="subject-badge" style="background:rgba(99,221,255,0.12);color:#007ea8">영어 ${r.english}</span>`;
+      meta.innerHTML = '<span class="subject-badge">수학 상담 가능</span><span class="subject-badge" style="background:rgba(99,221,255,0.12);color:#007ea8">영어 상담 가능</span>';
 
       const actions = document.createElement('div');
       actions.className = 'region-actions';
       const view = document.createElement('a');
-      view.href = r.link;
-      view.textContent = '선생님 보기';
+      view.href = row.link;
+      view.textContent = '지역 상세 보기';
       actions.appendChild(view);
 
       card.appendChild(title);
       card.appendChild(meta);
       card.appendChild(actions);
-
-      container.appendChild(card);
+      fragment.appendChild(card);
     });
   });
+
+  container.appendChild(fragment);
+
+  if (meta.hasMore) {
+    const more = document.createElement('p');
+    more.style.margin = '1rem 0 0';
+    more.style.color = 'var(--muted)';
+    more.innerHTML = `총 ${meta.totalCount}개 지역 중 일부만 표시 중입니다. <a href="regions.html" style="color:var(--primary-dark);font-weight:700;">전체 지역 보기</a>`;
+    container.appendChild(more);
+  }
 }
 
 function applyFilters() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const subj = document.getElementById('subjectFilter').value;
+  const searchInput = document.getElementById('searchInput');
+  const subjectFilter = document.getElementById('subjectFilter');
+  if (!searchInput || !subjectFilter) return;
 
-  let filtered = regions.filter((r) => {
-    const hay = (r.province + ' ' + r.city).toLowerCase();
+  const q = searchInput.value.trim().toLowerCase();
+  const subj = subjectFilter.value;
+
+  const filtered = regions.filter((row) => {
+    const hay = `${row.province} ${row.city}`.toLowerCase();
     return hay.includes(q);
   });
 
-  if (subj === 'math') filtered = filtered.filter((r) => r.math > 0);
-  if (subj === 'english') filtered = filtered.filter((r) => r.english > 0);
+  const isSubjectFiltered = subj === 'math' || subj === 'english';
+  if (!q && !isSubjectFiltered) {
+    const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
+    renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
+    return;
+  }
 
-  renderRegions(filtered);
+  const limited = filtered.slice(0, SEARCH_RESULT_LIMIT);
+  renderRegions(limited, { hasMore: filtered.length > limited.length, totalCount: filtered.length });
+}
+
+async function initHomeRegions() {
+  let source = null;
+
+  try {
+    const res = await fetch('data/regions.json', { cache: 'force-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        writeCachedRegions(data);
+        source = data;
+      }
+    }
+  } catch (e) {
+    // Use cache/fallback below.
+  }
+
+  if (!source) {
+    source = readCachedRegions() || fallbackRegions;
+  }
+
+  regions = flattenRegions(source);
+  const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
+  renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('searchInput').addEventListener('input', applyFilters);
-  document.getElementById('subjectFilter').addEventListener('change', applyFilters);
-  renderRegions(regions);
+  const searchInput = document.getElementById('searchInput');
+  const subjectFilter = document.getElementById('subjectFilter');
+  const onInput = debounce(applyFilters, 100);
+
+  if (searchInput) {
+    searchInput.addEventListener('input', onInput);
+  }
+  if (subjectFilter) {
+    subjectFilter.addEventListener('change', applyFilters);
+  }
+
+  initHomeRegions();
 });

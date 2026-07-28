@@ -294,6 +294,11 @@ h1 {
   padding: 5.2rem 0;
 }
 
+.section:not(.hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
 .section-light {
   background: var(--bg);
 }
@@ -396,6 +401,12 @@ h1 {
   overflow: hidden;
   background: var(--card);
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
+}
+
+.review-photo-card,
+.region-card,
+.hub-faq-item {
+  contain: layout paint;
 }
 
 .review-photo-card img {
