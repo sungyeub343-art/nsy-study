@@ -29,7 +29,7 @@ function updateSchemaData(regionText) {
     "@context": "https://schema.org",
     "@type": "Service",
     "name": `${regionText} 논술 과외`,
-    "description": `${regionText}의 수리논술, 인문논술 입시 전략 및 과외 상담 서비스`,
+    "description": `${regionText}의 수리논술, 인문논술, 약술형논술 입시 전략 및 과외 상담 서비스`,
     "provider": {
       "@type": "LocalBusiness",
       "name": "NSY Study",
@@ -46,7 +46,7 @@ function updateSchemaData(regionText) {
 
 function updateMetaTags(regionText, essayType = '논술') {
   const pageTitle = `${regionText} ${essayType} 과외 | 대학 입시 맞춤 상담`;
-  const pageDescription = `${regionText}에서 수리논술과 인문논술 준비를 고민 중이라면, 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요.`;
+  const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요.`;
   const canonicalUrl = buildCanonicalUrl('essay-region.html', ['province', 'city', 'town']);
   
   document.title = pageTitle;
@@ -186,11 +186,11 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   updateSchemaData(placeText);
 
   content.innerHTML = `
-    <p style="margin-top:0;color:var(--muted)">${hasTown ? town : city} 지역의 대학 입시 논술 전형 대비 과외 상담입니다. 수리논술, 인문논술, 자연계열 논술 등 학생의 수준과 목표에 맞춘 맞춤형 지도를 제공합니다.</p>
+    <p style="margin-top:0;color:var(--muted)">${hasTown ? town : city} 지역의 대학 입시 논술 전형 대비 과외 상담입니다. 수리논술, 인문논술, 약술형논술, 자연계열 논술 등 학생의 수준과 목표에 맞춘 맞춤형 지도를 제공합니다.</p>
     <h3 style="margin-top:1rem">상담 항목</h3>
     <ul>
       <li>논술 전형 대학 및 전공 선택</li>
-      <li>논술 유형(수리/인문/자연/의학) 파악</li>
+      <li>논술 유형(수리/인문/약술형/자연/의학) 파악</li>
       <li>현 수준 진단 및 단기/장기 학습 계획</li>
       <li>기출 분석 및 예상 출제 경향</li>
     </ul>
@@ -213,6 +213,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const essayTypes = [
     {name: '수리논술', desc: '수학 개념 이해와 논리적 풀이 과정 서술. 수학을 정리된 글로 표현하는 능력이 핵심입니다.', color: '#6a33f6', bg: '#f9f7ff'},
     {name: '인문논술', desc: '역사, 철학, 사회학적 관점에서 논제 분석 및 논거 제시. 폭넓은 배경지식과 비판적 사고가 필요합니다.', color: '#f5a623', bg: '#fffdf1'},
+    {name: '약술형논술', desc: '핵심 개념을 짧고 정확하게 서술하는 훈련입니다. 제한된 분량 안에서 근거 중심 답안을 완성하는 연습이 중요합니다.', color: '#8e44ad', bg: '#f8f0fc'},
     {name: '자연계논술', desc: '과학 개념을 바탕으로 자료 해석 및 현상 설명. 과학적 논리와 표현력을 요구합니다.', color: '#e74c3c', bg: '#fff5f4'},
     {name: '사회계논술', desc: '경제, 정치, 사회 현상 분석과 대안 제시. 다각적 관점과 현실 감각이 중요합니다.', color: '#3498db', bg: '#ecf8ff'},
     {name: '의학계열논술', desc: '의료 사례, 생명윤리, 사회문제 분석. 의학적 이해와 인문학적 소양을 함께 요구합니다.', color: '#2d9b4a', bg: '#f7fcf3'}
