@@ -11,6 +11,13 @@ const fallbackRegions = [
 ];
 
 let regions = [];
+let isHomeRegionsInitialized = false;
+
+function setRegionsAndRender(data) {
+  regions = flattenRegions(data);
+  const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
+  renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
+}
 
 function readCachedRegions() {
   try {
@@ -189,41 +196,59 @@ function applyFilters() {
 }
 
 async function initHomeRegions() {
-  let source = null;
+  const cached = readCachedRegions();
+  const source = cached && cached.length > 0 ? cached : fallbackRegions;
+  setRegionsAndRender(source);
 
   try {
     const res = await fetch('data/regions.json', { cache: 'force-cache' });
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        writeCachedRegions(data);
-        source = data;
-      }
+    if (!res.ok) return;
+
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      writeCachedRegions(data);
+      setRegionsAndRender(data);
     }
   } catch (e) {
-    // Use cache/fallback below.
+    // Keep rendered cached/fallback data.
   }
+}
 
-  if (!source) {
-    source = readCachedRegions() || fallbackRegions;
-  }
-
-  regions = flattenRegions(source);
-  const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
-  renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
+function scheduleHomeRegionsInit() {
+  if (isHomeRegionsInitialized) return;
+  isHomeRegionsInitialized = true;
+  initHomeRegions();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('searchInput');
   const subjectFilter = document.getElementById('subjectFilter');
-  const onInput = debounce(applyFilters, 100);
+  const onInput = debounce(() => {
+    scheduleHomeRegionsInit();
+    applyFilters();
+  }, 100);
 
   if (searchInput) {
     searchInput.addEventListener('input', onInput);
+    searchInput.addEventListener('focus', scheduleHomeRegionsInit, { once: true });
   }
   if (subjectFilter) {
-    subjectFilter.addEventListener('change', applyFilters);
+    subjectFilter.addEventListener('change', () => {
+      scheduleHomeRegionsInit();
+      applyFilters();
+    });
   }
 
-  initHomeRegions();
+  const regionsSection = document.getElementById('regions');
+  if (regionsSection && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        observer.disconnect();
+        scheduleHomeRegionsInit();
+      }
+    }, { rootMargin: '300px 0px' });
+    observer.observe(regionsSection);
+  } else {
+    scheduleHomeRegionsInit();
+  }
 });

@@ -21,21 +21,29 @@ function writeCachedRegions(data){
 }
 
 async function loadRegions(){
+  const cached = readCachedRegions();
+  if(cached && cached.length > 0){
+    initRegionsUI(cached);
+  }
+
   try{
     const res = await fetch('data/regions.json', { cache: 'force-cache' });
     if(!res.ok) throw new Error('Network response was not ok');
     const data = await res.json();
     if(Array.isArray(data) && data.length > 0){
       writeCachedRegions(data);
-      initRegionsUI(data);
+      if(!cached || cached.length === 0){
+        initRegionsUI(data);
+      }
       return;
     }
     throw new Error('regions.json was empty');
   }catch(e){
-    const cached = readCachedRegions();
     const source = cached && cached.length > 0 ? cached : fallbackRegions;
     console.warn('Fetch failed, using cached/fallback regions', e);
-    initRegionsUI(source);
+    if(!cached || cached.length === 0){
+      initRegionsUI(source);
+    }
   }
 }
 

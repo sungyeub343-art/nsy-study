@@ -21,20 +21,28 @@ function writeCachedRegions(data){
 }
 
 async function loadGedRegions(){
+  const cached = readCachedRegions();
+  if(cached && cached.length > 0){
+    initGedUI(cached);
+  }
+
   try{
     const res = await fetch('data/regions.json', { cache: 'force-cache' });
     const data = res.ok ? await res.json() : null;
     if(Array.isArray(data) && data.length > 0){
       writeCachedRegions(data);
-      initGedUI(data);
+      if(!cached || cached.length === 0){
+        initGedUI(data);
+      }
       return;
     }
     throw new Error('regions.json was empty');
   }catch(e){
-    const cached = readCachedRegions();
     const source = cached && cached.length > 0 ? cached : fallbackRegions;
     console.warn('Failed to load regions.json for GED page, using cached/fallback', e);
-    initGedUI(source);
+    if(!cached || cached.length === 0){
+      initGedUI(source);
+    }
   }
 }
 
