@@ -349,6 +349,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   contentEl.innerHTML += faqHtml;
 
+  upsertJsonLdScript('faqSchema', {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  });
+
   // 다른 서비스 안내 섹션
   let relatedHtml = `<h2 style="margin-top:2.5rem;padding-top:1.5rem;border-top:2px solid #eee;">📚 다른 수업도 살펴보세요</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:1.2rem;">

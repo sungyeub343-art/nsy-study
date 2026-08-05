@@ -48,6 +48,7 @@ function updateMetaTags(regionText, essayType = '논술') {
   const pageTitle = `${regionText} ${essayType} 과외 | 대학 입시 맞춤 상담`;
   const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요.`;
   const canonicalUrl = buildCanonicalUrl('essay-region.html', ['province', 'city', 'town']);
+  const pageKeywords = `${regionText} 논술 과외, ${regionText} 수리논술, ${regionText} 인문논술, ${regionText} 약술형논술, ${regionText} 논술 첨삭, 대학 논술 과외, 입시 논술 대비`;
   
   document.title = pageTitle;
   
@@ -59,6 +60,13 @@ function updateMetaTags(regionText, essayType = '논술') {
   const ogUrl = document.getElementById('ogUrl');
   const twitterTitle = document.getElementById('twitterTitle');
   const twitterDesc = document.getElementById('twitterDescription');
+  let keywordsMeta = document.querySelector('meta[name="keywords"]');
+
+  if(!keywordsMeta){
+    keywordsMeta = document.createElement('meta');
+    keywordsMeta.setAttribute('name', 'keywords');
+    document.head.appendChild(keywordsMeta);
+  }
   
   if(metaTitle) metaTitle.textContent = pageTitle;
   if(metaDesc) metaDesc.setAttribute('content', pageDescription);
@@ -68,6 +76,7 @@ function updateMetaTags(regionText, essayType = '논술') {
   if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
+  if(keywordsMeta) keywordsMeta.setAttribute('content', pageKeywords);
 
   upsertJsonLdScript('breadcrumbSchema', {
     "@context": "https://schema.org",
@@ -258,6 +267,19 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     faqHtml += `<div style="background:#f5f5f5;padding:1.2rem;border-radius:10px;margin:1rem 0;"><h4 style="color:#1a1a1a;margin:0 0 0.6rem;font-weight:700;">Q${idx+1}. ${faq.q}</h4><p style="color:#555;margin:0;line-height:1.6;">${faq.a}</p></div>`;
   });
   content.innerHTML += faqHtml;
+
+  upsertJsonLdScript('faqSchema', {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  });
 
   // 다른 서비스 안내 섹션
   let relatedHtml = `<div style="background:#fffdf1;margin:2rem 0;padding:1.5rem;border-radius:10px;border-left:4px solid #f5a623;">

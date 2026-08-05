@@ -48,6 +48,7 @@ function updateMetaTags(schoolName, city) {
   const pageTitle = `${schoolName} 국제학교 과외 | 커리큘럼 맞춤 상담`;
   const pageDescription = `${schoolName} 국제학교 학생에게 맞는 영어·수학·과학 과외와 IB·AP·국제커리큘럼 대비 1:1 맞춤 수업을 안내합니다.`;
   const canonicalUrl = buildCanonicalUrl('international-detail.html', ['school', 'name']);
+  const pageKeywords = `${schoolName} 국제학교 과외, ${schoolName} 영어 과외, ${schoolName} 수학 과외, IB 과외, AP 과외, IGCSE 과외, SAT 과외, 국제학교 입시 준비`;
   
   document.title = pageTitle;
   
@@ -59,6 +60,13 @@ function updateMetaTags(schoolName, city) {
   const ogUrl = document.getElementById('ogUrl');
   const twitterTitle = document.getElementById('twitterTitle');
   const twitterDesc = document.getElementById('twitterDescription');
+  let keywordsMeta = document.querySelector('meta[name="keywords"]');
+
+  if(!keywordsMeta){
+    keywordsMeta = document.createElement('meta');
+    keywordsMeta.setAttribute('name', 'keywords');
+    document.head.appendChild(keywordsMeta);
+  }
   
   if(metaTitle) metaTitle.textContent = pageTitle;
   if(metaDesc) metaDesc.setAttribute('content', pageDescription);
@@ -68,6 +76,7 @@ function updateMetaTags(schoolName, city) {
   if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
+  if(keywordsMeta) keywordsMeta.setAttribute('content', pageKeywords);
 
   upsertJsonLdScript('breadcrumbSchema', {
     "@context": "https://schema.org",
@@ -228,6 +237,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
     faqHtml += `<div style="background:#f5f5f5;padding:1.2rem;border-radius:10px;margin:1rem 0;"><h4 style="color:#1a1a1a;margin:0 0 0.6rem;font-weight:700;">Q${idx+1}. ${faq.q}</h4><p style="color:#555;margin:0;line-height:1.6;">${faq.a}</p></div>`;
   });
   content.innerHTML += faqHtml;
+
+  upsertJsonLdScript('faqSchema', {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  });
 
   // 다른 서비스 안내 섹션
   let relatedHtml = `<div style="background:#f0f8ff;margin:2rem 0;padding:1.5rem;border-radius:10px;border-left:4px solid #3498db;">

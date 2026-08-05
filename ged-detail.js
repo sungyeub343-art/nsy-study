@@ -318,6 +318,19 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   });
   content.innerHTML += faqHtml;
 
+  upsertJsonLdScript('faqSchema', {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  });
+
   // 검정고시 일정
   const schedule = [
     {term:'2026 상반기', apply:'2026-03-01 ~ 2026-03-10', exam:'2026-04-10', result:'2026-04-30'},
