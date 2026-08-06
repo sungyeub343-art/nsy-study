@@ -68,9 +68,9 @@ function updateSchemaData(placeText) {
 
 function updateMetaTags(placeText, subject = '검정고시') {
   const pageTitle = `${placeText} ${subject} 과외 | 시험 대비 맞춤 상담`;
-  const pageDescription = `${placeText} 초졸·중졸·고졸 검정고시 대비 1:1 맞춤 과외. 기출문제, 예상문제, 시험일정, 원서접수, 합격 전략까지 방문·화상 수업으로 안내합니다.`;
+  const pageDescription = `${placeText} 초졸·중졸·고졸 검정고시 대비 1:1 맞춤 과외. 기출문제, 예상문제, 시험일정, 원서접수, 합격 전략까지 방문·화상 수업으로 안내합니다. 검정고시 과외 추천과 과외 비용 상담도 가능합니다.`;
   const canonicalUrl = buildCanonicalUrl('ged-detail.html', ['province', 'city', 'town']);
-  const pageKeywords = `${placeText} 검정고시, 초졸 검정고시, 중졸 검정고시, 고졸 검정고시, 검정고시 과외, 검정고시 온라인, 검정고시 화상수업, 검정고시 기출문제, 검정고시 단기합격`;
+  const pageKeywords = `${placeText} 검정고시, ${placeText} 검정고시 과외 추천, ${placeText} 검정고시 과외 비용, 초졸 검정고시, 중졸 검정고시, 고졸 검정고시, 검정고시 과외, 검정고시 온라인, 검정고시 화상수업, 검정고시 기출문제, 검정고시 단기합격, 검정고시 내신 대체`;
   
   document.title = pageTitle;
   

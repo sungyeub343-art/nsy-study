@@ -87,9 +87,9 @@ function updateSchemaData(placeText) {
 
 function updateMetaTags(placeText, hasTown, city) {
   const pageTitle = `${placeText} 수학·영어 과외 | 지역 맞춤 학습 상담`;
-  const pageDescription = `${placeText} 초등·중등·고등 과외 상담. 내신, 수능, 수행평가, 자기주도학습까지 1:1 맞춤 커리큘럼으로 방문·화상 수업을 안내해드립니다.`;
+  const pageDescription = `${placeText} 초등·중등·고등 과외 상담. 내신, 수능, 중간고사, 기말고사, 수행평가, 자기주도학습까지 1:1 맞춤 커리큘럼으로 방문·화상 수업을 안내해드립니다. 과외 추천과 과외 비용 상담도 가능합니다.`;
   const canonicalUrl = buildCanonicalUrl('region.html', ['province', 'city', 'town']);
-  const pageKeywords = `${placeText} 과외, 초등 과외, 중등 과외, 고등 과외, 수학 과외, 영어 과외, 국어 과외, 과학 과외, 사회 과외, 방문 과외, 화상 과외, 1:1 과외, 학습관리, 내신, 수능`;
+  const pageKeywords = `${placeText} 과외, ${placeText} 과외 추천, ${placeText} 과외 비용, ${placeText} 과외 선생님, 초등 과외, 중등 과외, 고등 과외, 수학 과외, 영어 과외, 국어 과외, 과학 과외, 사회 과외, 방문 과외, 화상 과외, 1:1 과외, 학습관리, 내신, 수능, 중간고사 대비, 기말고사 대비`;
   
   // Update document title
   document.title = pageTitle;

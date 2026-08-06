@@ -46,9 +46,9 @@ function updateSchemaData(regionText) {
 
 function updateMetaTags(regionText, essayType = '논술') {
   const pageTitle = `${regionText} ${essayType} 과외 | 대학 입시 맞춤 상담`;
-  const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요.`;
+  const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요. 논술 과외 추천, 논술 과외 비용 상담, 대학별 기출 분석 상담도 가능합니다.`;
   const canonicalUrl = buildCanonicalUrl('essay-region.html', ['province', 'city', 'town']);
-  const pageKeywords = `${regionText} 논술 과외, ${regionText} 수리논술, ${regionText} 인문논술, ${regionText} 약술형논술, ${regionText} 논술 첨삭, 대학 논술 과외, 입시 논술 대비`;
+  const pageKeywords = `${regionText} 논술 과외, ${regionText} 논술 과외 추천, ${regionText} 논술 과외 비용, ${regionText} 수리논술, ${regionText} 인문논술, ${regionText} 약술형논술, ${regionText} 논술 첨삭, 대학 논술 과외, 입시 논술 대비, 대학별 논술 기출`;
   
   document.title = pageTitle;
   

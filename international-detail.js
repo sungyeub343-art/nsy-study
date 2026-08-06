@@ -46,9 +46,9 @@ function updateSchemaData(schoolName) {
 
 function updateMetaTags(schoolName, city) {
   const pageTitle = `${schoolName} 국제학교 과외 | 커리큘럼 맞춤 상담`;
-  const pageDescription = `${schoolName} 국제학교 학생에게 맞는 영어·수학·과학 과외와 IB·AP·국제커리큘럼 대비 1:1 맞춤 수업을 안내합니다.`;
+  const pageDescription = `${schoolName} 국제학교 학생에게 맞는 영어·수학·과학 과외와 IB·AP·IGCSE·SAT 대비 1:1 맞춤 수업을 안내합니다. 국제학교 과외 추천, 과외 비용 상담, 화상 과외 상담도 가능합니다.`;
   const canonicalUrl = buildCanonicalUrl('international-detail.html', ['school', 'name']);
-  const pageKeywords = `${schoolName} 국제학교 과외, ${schoolName} 영어 과외, ${schoolName} 수학 과외, IB 과외, AP 과외, IGCSE 과외, SAT 과외, 국제학교 입시 준비`;
+  const pageKeywords = `${schoolName} 국제학교 과외, ${schoolName} 국제학교 과외 추천, ${schoolName} 국제학교 과외 비용, ${schoolName} 영어 과외, ${schoolName} 수학 과외, IB 과외, AP 과외, IGCSE 과외, SAT 과외, 국제학교 입시 준비, 국제학교 화상 과외, 국제학교 내신 대비`;
   
   document.title = pageTitle;
   
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   updateSchemaData(record.name);
 
   content.innerHTML = `
-    <p style="color:var(--muted)">${record.name} 학생들을 위한 맞춤 과외 서비스입니다.</p>
+    <p style="color:var(--muted)">${record.name} 학생들을 위한 맞춤 과외 서비스입니다. 국제학교 과외 추천이 필요한 학부모님과 학생을 위해 현재 수준 진단, 과목별 플랜, 과외 비용 상담까지 함께 안내합니다.</p>
     <h3 style="margin-top:1rem">국제학교 과외 커리큘럼</h3>
     <p style="color:var(--muted);margin-top:0.3rem;">기초부터 중급까지, 국제학교 수업 방식에 맞춘 단계별 학습 플랜입니다.</p>
     <div style="margin-top:0.8rem;display:grid;gap:0.7rem;">
