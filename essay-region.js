@@ -186,7 +186,11 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   titleEl.textContent = `${placeText} 논술 과외 안내`;
   metaLine.textContent = '대학 입시 논술 전형 무료 상담';
-  hero.src = 'tutoring-landing-11.jpg';
+  hero.onerror = ()=>{
+    hero.onerror = null;
+    hero.src = 'tutoring-landing-11.jpg';
+  };
+  hero.src = 'essay-landing-11.jpg';
   
   // Update meta tags for SEO
   updateMetaTags(placeText, '논술');
