@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     hero.onerror = null;
     hero.src = 'tutoring-landing-11.jpg';
   };
-  hero.src = 'essay-landing-11.jpg';
+  hero.src = 'essay-landing-11.jpg?v=20260807a';
   
   // Update meta tags for SEO
   updateMetaTags(placeText, '논술');
