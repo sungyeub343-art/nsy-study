@@ -99,20 +99,10 @@ function updateMetaTags(placeText, subject = '검정고시') {
   if(twitterTitle) twitterTitle.setAttribute('content', pageTitle);
   if(twitterDesc) twitterDesc.setAttribute('content', pageDescription);
   if(keywordsMeta) keywordsMeta.setAttribute('content', pageKeywords);
+  const robotsMeta = document.getElementById('metaRobots');
+  if(robotsMeta) robotsMeta.setAttribute('content', 'index,follow,max-image-preview:large');
 
   upsertJsonLdScript('breadcrumbSchema', {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "홈",
-        "item": "https://nsystudy.kr/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
         "name": "검정고시",
         "item": "https://nsystudy.kr/ged.html"
       },

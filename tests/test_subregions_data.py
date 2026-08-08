@@ -26,6 +26,29 @@ class SubregionsDataTests(unittest.TestCase):
             self.assertIn('<link rel="dns-prefetch" href="https://fonts.googleapis.com"', html)
             self.assertIn('<link rel="dns-prefetch" href="https://fonts.gstatic.com"', html)
 
+    def test_template_pages_default_to_noindex(self):
+        templates = ["region.html", "ged-detail.html", "essay-region.html", "international-detail.html"]
+        for filename in templates:
+            html = (ROOT / filename).read_text(encoding="utf-8")
+            self.assertIn('content="noindex,follow"', html, f"{filename} should default to noindex")
+
+    def test_sitemap_has_no_bare_template_urls(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        for bare in [
+            "/region.html</",
+            "/ged-detail.html</",
+            "/essay-region.html</",
+            "/international-detail.html</",
+        ]:
+            self.assertNotIn(bare, sitemap, f"Bare template URL {bare} should not be in sitemap")
+
+    def test_sitemap_has_specific_region_urls(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn("region.html?province=", sitemap)
+        self.assertIn("ged-detail.html?province=", sitemap)
+        self.assertIn("essay-region.html?province=", sitemap)
+        self.assertIn("international-detail.html?school=", sitemap)
+
 
 if __name__ == "__main__":
     unittest.main()
