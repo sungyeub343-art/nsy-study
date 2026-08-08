@@ -32,6 +32,15 @@ class SubregionsDataTests(unittest.TestCase):
             html = (ROOT / filename).read_text(encoding="utf-8")
             self.assertIn('content="noindex,follow"', html, f"{filename} should default to noindex")
 
+    def test_detail_page_scripts_use_valid_breadcrumb_jsonld(self):
+        for filename in ["region.js", "essay-region.js", "ged-detail.js", "international-detail.js"]:
+            content = (ROOT / filename).read_text(encoding="utf-8")
+            self.assertRegex(
+                content,
+                r"upsertJsonLdScript\('breadcrumbSchema', \{\s*\"@context\": \"https://schema\.org\"",
+                f"{filename} should define a valid breadcrumb schema object",
+            )
+
     def test_sitemap_has_no_bare_template_urls(self):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         for bare in [

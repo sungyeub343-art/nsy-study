@@ -81,6 +81,19 @@ function updateMetaTags(regionText, essayType = '논술') {
   if(robotsMeta) robotsMeta.setAttribute('content', 'index,follow,max-image-preview:large');
 
   upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "논술 과외",
         "item": "https://nsystudy.kr/essay.html"
       },
       {
@@ -119,6 +132,16 @@ function getSubRegions(province, city){
   return provMap[city] || [];
 }
 
+function buildPlaceText(province, city, town){
+  const provinceText = (province || '').trim();
+  const cityText = (city || '').trim();
+  const townText = (town || '').trim();
+  const base = provinceText === cityText || !cityText
+    ? provinceText
+    : `${provinceText} ${cityText}`;
+  return townText ? `${base} ${townText}` : base;
+}
+
 document.addEventListener('DOMContentLoaded', async ()=>{
   const params = new URLSearchParams(location.search);
   const province = decodeParam(params.get('province')||'');
@@ -143,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   const hasTown = !!town;
-  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const placeText = buildPlaceText(province, city, town);
   const subRegions = getSubRegions(province, city);
 
   if(backToEssayList){

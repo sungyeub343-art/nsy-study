@@ -22,6 +22,16 @@ function getSubRegions(province, city){
   return provMap[city] || [];
 }
 
+function buildPlaceText(province, city, town){
+  const provinceText = (province || '').trim();
+  const cityText = (city || '').trim();
+  const townText = (town || '').trim();
+  const base = provinceText === cityText || !cityText
+    ? provinceText
+    : `${provinceText} ${cityText}`;
+  return townText ? `${base} ${townText}` : base;
+}
+
 function sampleTeachers(province, city){
   const key = province + '|' + city;
   const db = {
@@ -124,6 +134,19 @@ function updateMetaTags(placeText, hasTown, city) {
   if(robotsMeta) robotsMeta.setAttribute('content', 'index,follow,max-image-preview:large');
 
   upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "전국과외",
         "item": "https://nsystudy.kr/regions.html"
       },
       {
@@ -177,7 +200,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   const subRegions = getSubRegions(province, city);
   const hasTown = !!town;
-  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const placeText = buildPlaceText(province, city, town);
   const isSeongdong = province === '서울특별시' && city === '성동구';
 
   if(backToList){

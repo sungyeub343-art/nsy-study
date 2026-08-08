@@ -22,6 +22,16 @@ function getSubRegions(province, city){
   return provMap[city] || [];
 }
 
+function buildPlaceText(province, city, town){
+  const provinceText = (province || '').trim();
+  const cityText = (city || '').trim();
+  const townText = (town || '').trim();
+  const base = provinceText === cityText || !cityText
+    ? provinceText
+    : `${provinceText} ${cityText}`;
+  return townText ? `${base} ${townText}` : base;
+}
+
 function buildCanonicalUrl(pageName, keys){
   const params = new URLSearchParams(window.location.search);
   const normalized = new URLSearchParams();
@@ -103,6 +113,18 @@ function updateMetaTags(placeText, subject = '검정고시') {
   if(robotsMeta) robotsMeta.setAttribute('content', 'index,follow,max-image-preview:large');
 
   upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
         "name": "검정고시",
         "item": "https://nsystudy.kr/ged.html"
       },
@@ -154,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   const hasTown = !!town;
-  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const placeText = buildPlaceText(province, city, town);
   const subRegions = getSubRegions(province, city);
   const isSeongdong = province === '서울특별시' && city === '성동구';
 

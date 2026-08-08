@@ -81,6 +81,19 @@ function updateMetaTags(schoolName, city) {
   if(robotsMeta) robotsMeta.setAttribute('content', 'index,follow,max-image-preview:large');
 
   upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://nsystudy.kr/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "국제학교",
         "item": "https://nsystudy.kr/international.html"
       },
       {
