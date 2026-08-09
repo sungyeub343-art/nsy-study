@@ -217,7 +217,16 @@ async function initHomeRegions() {
 function scheduleHomeRegionsInit() {
   if (isHomeRegionsInitialized) return;
   isHomeRegionsInitialized = true;
-  initHomeRegions();
+
+  const startInit = () => {
+    void initHomeRegions();
+  };
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(startInit, { timeout: 1500 });
+  } else {
+    window.setTimeout(startInit, 120);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

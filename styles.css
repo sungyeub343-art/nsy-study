@@ -18,12 +18,24 @@ html {
   scroll-behavior: smooth;
 }
 
+section {
+  scroll-margin-top: 6rem;
+}
+
+.hero,
+.section,
+.article-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px 600px;
+}
+
 body {
   margin: 0;
   font-family: 'Noto Sans KR', sans-serif;
   color: var(--text);
   line-height: 1.6;
   background: #fff;
+  overflow-x: hidden;
 }
 
 a {
@@ -189,6 +201,11 @@ h1 {
 
 .btn:hover {
   transform: translateY(-2px);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(31, 95, 255, 0.28);
+  outline-offset: 3px;
 }
 
 .btn-primary {
