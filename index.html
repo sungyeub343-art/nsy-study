@@ -41,15 +41,22 @@
       content="영어과외, 수학과외, 국제학교 영어 수학 과외, 검정고시 과외, 논술 과외를 한 곳에서 상담하고 학생별 맞춤 수업을 안내합니다."
     />
     <meta name="twitter:image" content="https://nsystudy.kr/data/og-cover.png" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <link rel="preload" as="image" href="tutoring-landing-11.avif" type="image/avif" fetchpriority="high" />
+    <link rel="preload" href="script.js?v=20260810a" as="script" />
     <link rel="stylesheet" href="styles.css?v=20260729c" />
     <script type="application/ld+json">
     {
@@ -230,7 +237,7 @@
               <picture>
                 <source srcset="review-photo-1.avif" type="image/avif" />
                 <source srcset="review-photo-1.webp" type="image/webp" />
-                <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" decoding="async" width="1000" height="750" />
+                <img class="hero-photo-sub" src="review-photo-1.jpg?t=20260721120000" alt="" loading="lazy" decoding="async" fetchpriority="low" width="1000" height="750" />
               </picture>
               <div class="hero-badge hero-badge-top">오늘 상담 가능</div>
               <div class="hero-badge hero-badge-bottom">내신 · 수능 · 국제학교 · 검정고시</div>
@@ -466,6 +473,6 @@
         <a href="#top">맨 위로</a>
       </div>
     </footer>
-    <script src="script.js?v=20260731a" defer></script>
+    <script src="script.js?v=20260810a" defer></script>
   </body>
 </html>
