@@ -11,12 +11,25 @@ const fallbackRegions = [
 ];
 
 let regions = [];
+let featuredRegions = [];
 let isHomeRegionsInitialized = false;
+let lastRenderedRegionSignature = '';
 
 function setRegionsAndRender(data) {
-  regions = flattenRegions(data);
-  const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
-  renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
+  const nextRegions = flattenRegions(data);
+  const nextSignature = buildRowsSignature(nextRegions);
+  if (nextSignature === lastRenderedRegionSignature && regions.length > 0) {
+    return;
+  }
+
+  lastRenderedRegionSignature = nextSignature;
+  regions = nextRegions;
+  featuredRegions = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
+  renderCurrentHomeView();
+}
+
+function buildRowsSignature(rows) {
+  return rows.map((row) => `${row.province}|${row.city}`).join('~');
 }
 
 function readCachedRegions() {
@@ -60,6 +73,7 @@ function flattenRegions(data) {
       rows.push({
         province: prov.province,
         city,
+        keyword: `${prov.province} ${city}`.toLowerCase(),
         link: buildRegionUrl(prov.province, city)
       });
     });
@@ -180,19 +194,36 @@ function applyFilters() {
   const subj = subjectFilter.value;
 
   const filtered = regions.filter((row) => {
-    const hay = `${row.province} ${row.city}`.toLowerCase();
-    return hay.includes(q);
+    return row.keyword.includes(q);
   });
 
   const isSubjectFiltered = subj === 'math' || subj === 'english';
   if (!q && !isSubjectFiltered) {
-    const featured = buildFeaturedRegions(regions, HOME_FEATURED_LIMIT);
-    renderRegions(featured, { hasMore: regions.length > featured.length, totalCount: regions.length });
+    renderRegions(featuredRegions, { hasMore: regions.length > featuredRegions.length, totalCount: regions.length });
     return;
   }
 
   const limited = filtered.slice(0, SEARCH_RESULT_LIMIT);
   renderRegions(limited, { hasMore: filtered.length > limited.length, totalCount: filtered.length });
+}
+
+function renderCurrentHomeView() {
+  const searchInput = document.getElementById('searchInput');
+  const subjectFilter = document.getElementById('subjectFilter');
+
+  if (!searchInput || !subjectFilter) {
+    renderRegions(featuredRegions, { hasMore: regions.length > featuredRegions.length, totalCount: regions.length });
+    return;
+  }
+
+  const hasQuery = searchInput.value.trim().length > 0;
+  const hasSubjectFilter = subjectFilter.value === 'math' || subjectFilter.value === 'english';
+  if (hasQuery || hasSubjectFilter) {
+    applyFilters();
+    return;
+  }
+
+  renderRegions(featuredRegions, { hasMore: regions.length > featuredRegions.length, totalCount: regions.length });
 }
 
 async function initHomeRegions() {
