@@ -21,6 +21,14 @@ class SubregionsDataTests(unittest.TestCase):
         self.assertIn('"강남구"', content)
         self.assertIn('"압구정동"', content)
 
+    def test_data_file_contains_incheon_subregions(self):
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        self.assertIn('"인천광역시"', content)
+        for district in ["중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진군"]:
+            self.assertIn(f'"{district}"', content)
+        for subregion in ["영종1동", "송림1동", "용현1·4동", "송도1동", "논현1동", "산곡1동", "계양1동", "청라1동", "강화읍", "백령면"]:
+            self.assertIn(f'"{subregion}"', content)
+
     def test_detail_pages_load_the_subregions_script(self):
         for filename in ["region.html", "essay-region.html", "ged-detail.html"]:
             html = (ROOT / filename).read_text(encoding="utf-8")
