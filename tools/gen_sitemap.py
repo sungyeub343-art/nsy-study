@@ -1,9 +1,10 @@
 """Generate sitemap.xml with real region/detail URLs."""
+import json
 from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LASTMOD = "2026-08-08"
+LASTMOD = "2026-08-28"
 BASE = "https://nsystudy.kr"
 
 
@@ -29,9 +30,20 @@ REGION_CITIES = [
     ("인천광역시", ["연수구"]),
     ("대구광역시", ["중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군", "군위군"]),
     ("대전광역시", ["유성구"]),
-    ("광주광역시", ["광산구"]),
+    ("전남광주통합특별시", ["동구", "서구", "남구", "북구", "광산구",
+                         "목포시", "여수시", "순천시", "나주시", "광양시",
+                         "담양군", "곡성군", "구례군", "고흥군", "보성군",
+                         "화순군", "장흥군", "강진군", "해남군", "영암군",
+                         "무안군", "함평군", "영광군", "장성군", "완도군",
+                         "진도군", "신안군"]),
     ("제주특별자치도", ["제주시"]),
 ]
+
+
+def load_subregions():
+    source = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+    payload = source.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+    return json.loads(payload)
 
 # ── GED detail pages ───────────────────────────────────────────────────────
 GED_CITIES = [
@@ -80,10 +92,14 @@ for path, prio, freq in HUB_PAGES:
     lines.append(url_entry(loc, prio, freq))
 
 # region.html detail URLs
+subregions = load_subregions()
 for province, cities in REGION_CITIES:
     for city in cities:
         loc = f"{BASE}/region.html?province={enc(province)}&amp;city={enc(city)}"
         lines.append(url_entry(loc, 0.8, "daily"))
+        for town in subregions.get(province, {}).get(city, []):
+            town_loc = f"{loc}&amp;town={enc(town)}"
+            lines.append(url_entry(town_loc, 0.7, "weekly"))
 
 # ged-detail.html URLs
 for province, cities in GED_CITIES:

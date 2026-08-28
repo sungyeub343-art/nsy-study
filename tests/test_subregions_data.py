@@ -1,11 +1,39 @@
+import json
 import re
 import unittest
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
 class SubregionsDataTests(unittest.TestCase):
+    def test_jeonnam_gwangju_regions_are_merged(self):
+        regions = json.loads((ROOT / "data" / "regions.json").read_text(encoding="utf-8"))
+        provinces = {region["province"]: region["cities"] for region in regions}
+        expected_cities = {
+            "동구", "서구", "남구", "북구", "광산구",
+            "목포시", "여수시", "순천시", "나주시", "광양시",
+            "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군",
+            "장흥군", "강진군", "해남군", "영암군", "무안군", "함평군",
+            "영광군", "장성군", "완도군", "진도군", "신안군",
+        }
+
+        self.assertNotIn("광주광역시", provinces)
+        self.assertNotIn("전라남도", provinces)
+        self.assertEqual(expected_cities, set(provinces["전남광주통합특별시"]))
+
+    def test_jeonnam_gwangju_cities_have_subregions(self):
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.removeprefix("// City -> town/eup/myeon mapping for local pages.\n// Extend this object to support more provinces and cities.\nwindow.subRegionsData = ").removesuffix(";\n")
+        subregions = json.loads(payload)["전남광주통합특별시"]
+
+        self.assertEqual(27, len(subregions))
+        self.assertTrue(all(names for names in subregions.values()))
+        self.assertIn("충장동", subregions["동구"])
+        self.assertIn("돌산읍", subregions["여수시"])
+        self.assertIn("흑산면", subregions["신안군"])
+
     def test_data_file_contains_multiple_provinces(self):
         content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
         self.assertIn('"서울특별시"', content)
@@ -75,6 +103,15 @@ class SubregionsDataTests(unittest.TestCase):
     def test_daegu_region_urls_are_in_sitemap(self):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         self.assertIn("province=%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C&amp;city=%EC%88%98%EC%84%B1%EA%B5%AC", sitemap)
+
+    def test_jeonnam_gwangju_city_and_town_urls_are_in_sitemap(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        province = quote("전남광주통합특별시", safe="")
+        city = quote("여수시", safe="")
+        town = quote("돌산읍", safe="")
+        self.assertIn(f"province={province}&amp;city={city}", sitemap)
+        self.assertIn(f"province={province}&amp;city={city}&amp;town={town}", sitemap)
+        self.assertNotIn(f"province={quote('광주광역시', safe='')}&amp;", sitemap)
 
 
 if __name__ == "__main__":

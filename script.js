@@ -1,4 +1,4 @@
-const REGION_CACHE_KEY = 'nsy_regions_v1';
+const REGION_CACHE_KEY = 'nsy_regions_v2';
 const HOME_FEATURED_LIMIT = 20;
 const SEARCH_RESULT_LIMIT = 80;
 
