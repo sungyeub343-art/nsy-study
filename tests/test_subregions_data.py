@@ -57,6 +57,26 @@ class SubregionsDataTests(unittest.TestCase):
         for subregion in ["영종1동", "송림1동", "용현1·4동", "송도1동", "논현1동", "산곡1동", "계양1동", "청라1동", "강화읍", "백령면"]:
             self.assertIn(f'"{subregion}"', content)
 
+    def test_daejeon_districts_have_subregions(self):
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["대전광역시"]
+
+        self.assertEqual({"동구", "중구", "서구", "유성구", "대덕구"}, set(subregions))
+        self.assertEqual(
+            {"동구": 16, "중구": 17, "서구": 24, "유성구": 13, "대덕구": 12},
+            {district: len(towns) for district, towns in subregions.items()},
+        )
+        self.assertTrue(all(len(towns) == len(set(towns)) for towns in subregions.values()))
+        for district, town in {
+            "동구": "판암1동",
+            "중구": "은행선화동",
+            "서구": "둔산1동",
+            "유성구": "노은1동",
+            "대덕구": "신탄진동",
+        }.items():
+            self.assertIn(town, subregions[district])
+
     def test_detail_pages_load_the_subregions_script(self):
         for filename in ["region.html", "essay-region.html", "ged-detail.html"]:
             html = (ROOT / filename).read_text(encoding="utf-8")
@@ -103,6 +123,19 @@ class SubregionsDataTests(unittest.TestCase):
     def test_daegu_region_urls_are_in_sitemap(self):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         self.assertIn("province=%EB%8C%80%EA%B5%AC%EA%B4%91%EC%97%AD%EC%8B%9C&amp;city=%EC%88%98%EC%84%B1%EA%B5%AC", sitemap)
+
+    def test_daejeon_district_and_town_urls_are_in_sitemap(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["대전광역시"]
+        province = quote("대전광역시", safe="")
+
+        for city, towns in subregions.items():
+            city_url = f"province={province}&amp;city={quote(city, safe='')}"
+            self.assertIn(city_url, sitemap)
+            for town in towns:
+                self.assertIn(f"{city_url}&amp;town={quote(town, safe='')}", sitemap)
 
     def test_jeonnam_gwangju_city_and_town_urls_are_in_sitemap(self):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
