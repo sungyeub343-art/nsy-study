@@ -77,6 +77,26 @@ class SubregionsDataTests(unittest.TestCase):
         }.items():
             self.assertIn(town, subregions[district])
 
+    def test_ulsan_districts_have_subregions(self):
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["울산광역시"]
+
+        self.assertEqual({"중구", "남구", "동구", "북구", "울주군"}, set(subregions))
+        self.assertEqual(
+            {"중구": 12, "남구": 14, "동구": 9, "북구": 8, "울주군": 12},
+            {district: len(towns) for district, towns in subregions.items()},
+        )
+        self.assertTrue(all(len(towns) == len(set(towns)) for towns in subregions.values()))
+        for district, town in {
+            "중구": "복산동",
+            "남구": "야음장생포동",
+            "동구": "남목3동",
+            "북구": "농소1동",
+            "울주군": "삼남읍",
+        }.items():
+            self.assertIn(town, subregions[district])
+
     def test_detail_pages_load_the_subregions_script(self):
         for filename in ["region.html", "essay-region.html", "ged-detail.html"]:
             html = (ROOT / filename).read_text(encoding="utf-8")
@@ -130,6 +150,19 @@ class SubregionsDataTests(unittest.TestCase):
         payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
         subregions = json.loads(payload)["대전광역시"]
         province = quote("대전광역시", safe="")
+
+        for city, towns in subregions.items():
+            city_url = f"province={province}&amp;city={quote(city, safe='')}"
+            self.assertIn(city_url, sitemap)
+            for town in towns:
+                self.assertIn(f"{city_url}&amp;town={quote(town, safe='')}", sitemap)
+
+    def test_ulsan_district_and_town_urls_are_in_sitemap(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["울산광역시"]
+        province = quote("울산광역시", safe="")
 
         for city, towns in subregions.items():
             city_url = f"province={province}&amp;city={quote(city, safe='')}"
