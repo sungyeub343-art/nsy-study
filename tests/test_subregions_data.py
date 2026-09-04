@@ -97,6 +97,28 @@ class SubregionsDataTests(unittest.TestCase):
         }.items():
             self.assertIn(town, subregions[district])
 
+    def test_gyeonggi_cities_have_subregions(self):
+        regions = json.loads((ROOT / "data" / "regions.json").read_text(encoding="utf-8"))
+        expected_cities = next(region["cities"] for region in regions if region["province"] == "경기도")
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["경기도"]
+
+        self.assertEqual(31, len(subregions))
+        self.assertEqual(set(expected_cities), set(subregions))
+        self.assertTrue(all(names for names in subregions.values()))
+        self.assertTrue(all(len(names) == len(set(names)) for names in subregions.values()))
+        for city, town in {
+            "수원시": "광교2동",
+            "성남시": "분당구 판교동",
+            "용인시": "처인구 남사읍",
+            "화성시": "동탄9동",
+            "광주시": "오포1동",
+            "가평군": "가평읍",
+            "양평군": "양동면",
+        }.items():
+            self.assertIn(town, subregions[city])
+
     def test_detail_pages_load_the_subregions_script(self):
         for filename in ["region.html", "essay-region.html", "ged-detail.html"]:
             html = (ROOT / filename).read_text(encoding="utf-8")
@@ -163,6 +185,19 @@ class SubregionsDataTests(unittest.TestCase):
         payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
         subregions = json.loads(payload)["울산광역시"]
         province = quote("울산광역시", safe="")
+
+        for city, towns in subregions.items():
+            city_url = f"province={province}&amp;city={quote(city, safe='')}"
+            self.assertIn(city_url, sitemap)
+            for town in towns:
+                self.assertIn(f"{city_url}&amp;town={quote(town, safe='')}", sitemap)
+
+    def test_gyeonggi_city_and_town_urls_are_in_sitemap(self):
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)["경기도"]
+        province = quote("경기도", safe="")
 
         for city, towns in subregions.items():
             city_url = f"province={province}&amp;city={quote(city, safe='')}"
