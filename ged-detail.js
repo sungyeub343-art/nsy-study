@@ -1,5 +1,65 @@
 function decodeParam(v){ try{ return decodeURIComponent(v); }catch(e){ return v; } }
 
+function buildCanonicalUrl(){
+  const source = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams();
+  ['province', 'city', 'town'].forEach((key) => {
+    const value = source.get(key);
+    if(value) params.set(key, value);
+  });
+  return `https://nsystudy.kr/ged-detail.html?${params.toString()}`;
+}
+
+function upsertJsonLdScript(id, data){
+  let script = document.getElementById(id);
+  if(!script){
+    script = document.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(data);
+}
+
+function updateMetaTags(placeText){
+  const pageTitle = `${placeText} 검정고시 과외 | 초졸·중졸·고졸 무료상담`;
+  const pageDescription = `${placeText} 지역 초졸·중졸·고졸 검정고시 1:1 맞춤 과외 안내입니다. 과목별 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.`;
+  const canonicalUrl = buildCanonicalUrl();
+  const values = {
+    metaTitle: pageTitle,
+    ogTitle: pageTitle,
+    twitterTitle: pageTitle
+  };
+
+  document.title = pageTitle;
+  Object.entries(values).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if(element) element.setAttribute('content', value);
+  });
+  const metaTitle = document.getElementById('metaTitle');
+  if(metaTitle) metaTitle.textContent = pageTitle;
+  ['metaDescription', 'ogDescription', 'twitterDescription'].forEach((id) => {
+    const element = document.getElementById(id);
+    if(element) element.setAttribute('content', pageDescription);
+  });
+  const canonical = document.getElementById('canonicalLink');
+  if(canonical) canonical.setAttribute('href', canonicalUrl);
+  const ogUrl = document.getElementById('ogUrl');
+  if(ogUrl) ogUrl.setAttribute('content', canonicalUrl);
+  const robots = document.getElementById('metaRobots');
+  if(robots) robots.setAttribute('content', 'index,follow,max-image-preview:large');
+
+  upsertJsonLdScript('breadcrumbSchema', {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "홈", "item": "https://nsystudy.kr/" },
+      { "@type": "ListItem", "position": 2, "name": "검정고시", "item": "https://nsystudy.kr/ged.html" },
+      { "@type": "ListItem", "position": 3, "name": placeText, "item": canonicalUrl }
+    ]
+  });
+}
+
 function buildPageUrl(pageName, query) {
   const path = window.location.pathname;
   const basePath = path.endsWith('/')
@@ -48,6 +108,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   const hasTown = !!town;
   const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
   const subRegions = getSubRegions(province, city);
+  updateMetaTags(placeText);
 
   if(backToGedList){
     if(hasTown){

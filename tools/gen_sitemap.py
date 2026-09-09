@@ -4,7 +4,7 @@ from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LASTMOD = "2026-08-28"
+LASTMOD = "2026-09-09"
 BASE = "https://nsystudy.kr"
 
 
@@ -50,14 +50,9 @@ def load_subregions():
     payload = source.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
     return json.loads(payload)
 
-# ── GED detail pages ───────────────────────────────────────────────────────
-GED_CITIES = [
-    ("서울특별시", ["강남구", "서초구", "강서구", "노원구", "관악구"]),
-    ("경기도",    ["수원시", "성남시", "용인시"]),
-    ("부산광역시", ["해운대구"]),
-    ("인천광역시", ["연수구"]),
-    ("대구광역시", ["수성구"]),
-]
+
+def load_regions():
+    return json.loads((ROOT / "data" / "regions.json").read_text(encoding="utf-8"))
 
 # ── Essay region pages ─────────────────────────────────────────────────────
 ESSAY_CITIES = [
@@ -107,10 +102,14 @@ for province, cities in REGION_CITIES:
             lines.append(url_entry(town_loc, 0.7, "weekly"))
 
 # ged-detail.html URLs
-for province, cities in GED_CITIES:
-    for city in cities:
+for region in load_regions():
+    province = region["province"]
+    for city in region["cities"]:
         loc = f"{BASE}/ged-detail.html?province={enc(province)}&amp;city={enc(city)}"
         lines.append(url_entry(loc, 0.7, "weekly"))
+        for town in subregions.get(province, {}).get(city, []):
+            town_loc = f"{loc}&amp;town={enc(town)}"
+            lines.append(url_entry(town_loc, 0.6, "weekly"))
 
 # essay-region.html URLs
 for province, cities in ESSAY_CITIES:
