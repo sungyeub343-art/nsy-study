@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title id="metaTitle">지역별 국어 과외 상담 | NSY Study</title>
+    <meta id="metaDescription" name="description" content="지역별 초등·중등·고등 국어 과외 상담 안내입니다. 독해, 문학, 비문학, 문법, 내신과 수능 국어 맞춤 수업을 확인하세요." />
+    <meta id="metaKeywords" name="keywords" content="국어 과외, 초등 국어, 중등 국어, 고등 국어, 내신 국어, 수능 국어" />
+    <meta id="metaRobots" name="robots" content="noindex,follow" />
+    <link id="canonicalLink" rel="canonical" href="https://nsystudy.kr/korean-region.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NSY Study" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta id="ogTitle" property="og:title" content="지역별 국어 과외 상담 | NSY Study" />
+    <meta id="ogDescription" property="og:description" content="지역별 국어 과외와 내신·수능 대비 맞춤 상담을 안내합니다." />
+    <meta id="ogUrl" property="og:url" content="https://nsystudy.kr/korean-region.html" />
+    <meta property="og:image" content="https://nsystudy.kr/data/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta id="twitterTitle" name="twitter:title" content="지역별 국어 과외 상담 | NSY Study" />
+    <meta id="twitterDescription" name="twitter:description" content="초등 독해부터 중등 내신, 고등 수능 국어까지 지역별 맞춤 상담을 확인하세요." />
+    <meta name="twitter:image" content="https://nsystudy.kr/data/og-cover.png" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="styles.css?v=20260729c" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html"><span class="brand-mark">NSY</span><span>Study</span></a>
+        <nav class="nav-links">
+          <details class="nav-menu">
+            <summary>과외 분야</summary>
+            <div class="nav-menu-list">
+              <a href="regions.html">전국과외</a>
+              <a href="korean.html">국어과외</a>
+              <a href="international.html">국제학교</a>
+              <a href="ged.html">검정고시</a>
+              <a href="essay.html">논술</a>
+            </div>
+          </details>
+          <a href="index.html#contact">무료 상담</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container" style="padding:2rem 0;">
+        <a id="backToList" href="korean.html" style="color:var(--primary);font-weight:700;">← 국어 과외 지역 목록으로 돌아가기</a>
+        <article class="article-card" style="margin-top:0.6rem;padding:1.4rem;border-radius:12px;border:1px solid var(--border);background:white;">
+          <div class="article-meta">
+            <span class="eyebrow">국어 과외</span>
+            <h1 id="regionTitle"></h1>
+            <div id="metaLine" style="color:var(--muted)"></div>
+          </div>
+          <img id="heroImg" src="tutoring-landing-11.avif" alt="국어 과외 맞춤 상담" loading="eager" decoding="async" fetchpriority="high" width="1080" height="1350" style="width:min(560px,100%);height:auto;object-fit:contain;border-radius:10px;display:block;margin:0 auto 1rem;" />
+          <section id="subregionSection" style="display:none;margin-bottom:1rem;">
+            <h2 id="subregionTitle" style="margin:0 0 0.6rem;font-size:1.15rem;"></h2>
+            <p id="subregionHelp" style="margin:0 0 0.8rem;color:var(--muted);"></p>
+            <div id="subregionGrid" class="district-grid"></div>
+          </section>
+          <div id="articleContent" style="color:var(--text);line-height:1.7"></div>
+          <div style="margin-top:1.2rem;"><a id="consultBtn" class="btn btn-primary" href="tel:+821029283614">전화로 무료 상담하기</a></div>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-wrap"><p>© 2026 NSY Study. 국어 과외 상담 안내.</p><a href="korean.html">국어 과외 지역 목록</a></div></footer>
+    <script src="subregions-data.js?v=20260909a" defer></script>
+    <script src="korean-region.js?v=20260912a" defer></script>
+  </body>
+</html>

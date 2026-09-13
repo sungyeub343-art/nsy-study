@@ -4,7 +4,7 @@ from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LASTMOD = "2026-09-09"
+LASTMOD = "2026-09-12"
 BASE = "https://nsystudy.kr"
 
 
@@ -16,6 +16,7 @@ def enc(s):
 HUB_PAGES = [
     ("", 1.0, "weekly"),
     ("regions.html", 0.9, "weekly"),
+    ("korean.html", 0.9, "weekly"),
     ("international.html", 0.8, "weekly"),
     ("ged.html", 0.8, "weekly"),
     ("essay.html", 0.8, "weekly"),
@@ -106,6 +107,16 @@ for region in load_regions():
     province = region["province"]
     for city in region["cities"]:
         loc = f"{BASE}/ged-detail.html?province={enc(province)}&amp;city={enc(city)}"
+        lines.append(url_entry(loc, 0.7, "weekly"))
+        for town in subregions.get(province, {}).get(city, []):
+            town_loc = f"{loc}&amp;town={enc(town)}"
+            lines.append(url_entry(town_loc, 0.6, "weekly"))
+
+# korean-region.html URLs
+for region in load_regions():
+    province = region["province"]
+    for city in region["cities"]:
+        loc = f"{BASE}/korean-region.html?province={enc(province)}&amp;city={enc(city)}"
         lines.append(url_entry(loc, 0.7, "weekly"))
         for town in subregions.get(province, {}).get(city, []):
             town_loc = f"{loc}&amp;town={enc(town)}"
