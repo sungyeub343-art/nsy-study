@@ -32,7 +32,7 @@ function updateSchemaData(regionText) {
     "description": `${regionText}의 수리논술, 인문논술, 약술형논술 입시 전략 및 과외 상담 서비스`,
     "provider": {
       "@type": "LocalBusiness",
-      "name": "NSY Study",
+      "name": "에듀코NSY스터디",
       "url": "https://nsystudy.kr/",
       "telephone": "+82-10-2928-3614",
       "areaServed": "KR"
@@ -114,7 +114,7 @@ function updateMetaTags(regionText, essayType = '논술') {
     "inLanguage": "ko-KR",
     "isPartOf": {
       "@type": "WebSite",
-      "name": "NSY Study",
+      "name": "에듀코NSY스터디",
       "url": "https://nsystudy.kr/"
     }
   });
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 
   // 교사 정보
   let teacherHtml = `<h2 style="margin-top:2rem">👨‍🏫 우리 선생님들</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;">NSY Study의 논술 전문 교사 기준:</p>
+    <p style="color:var(--muted);margin-bottom:1.5rem;">에듀코NSY스터디의 논술 전문 교사 기준:</p>
     <ul style="color:#555;line-height:1.8;">
       <li>✓ 논술 채점 기준, 출제 경향, 대학별 기출 분석 숙지</li>
       <li>✓ 주요 대학 논술 입시 성공 경험 보유</li>

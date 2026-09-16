@@ -71,7 +71,7 @@ function updateScienceMetaTags(placeText){
     description: pageDescription,
     provider: {
       '@type': 'LocalBusiness',
-      name: 'NSY Study',
+      name: '에듀코NSY스터디',
       url: 'https://nsystudy.kr/',
       telephone: '+82-10-2928-3614',
       areaServed: 'KR'
