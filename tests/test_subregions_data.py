@@ -165,11 +165,27 @@ class SubregionsDataTests(unittest.TestCase):
         self.assertIn("upsertScienceJsonLd('breadcrumbSchema'", script)
         self.assertIn("'@context': 'https://schema.org'", script)
 
+    def test_social_detail_template_has_seo_and_subregion_support(self):
+        html = (ROOT / "social-region.html").read_text(encoding="utf-8")
+        script = (ROOT / "social-region.js").read_text(encoding="utf-8")
+
+        self.assertIn('content="noindex,follow"', html)
+        self.assertIn('<script src="subregions-data.js', html)
+        self.assertIn('<link rel="dns-prefetch" href="https://fonts.googleapis.com"', html)
+        self.assertIn("upsertSocialJsonLd('breadcrumbSchema'", script)
+        self.assertIn("'@context': 'https://schema.org'", script)
+
     def test_subject_navigation_links_to_science_hub(self):
         for path in ROOT.glob("*.html"):
             html = path.read_text(encoding="utf-8")
             if '<div class="nav-menu-list">' in html:
                 self.assertIn('<a href="science.html">과학과외</a>', html, path.name)
+
+    def test_subject_navigation_links_to_social_hub(self):
+        for path in ROOT.glob("*.html"):
+            html = path.read_text(encoding="utf-8")
+            if '<div class="nav-menu-list">' in html:
+                self.assertIn('<a href="social.html">사회과외</a>', html, path.name)
 
     def test_sitemap_has_no_bare_template_urls(self):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
@@ -180,6 +196,7 @@ class SubregionsDataTests(unittest.TestCase):
             "/international-detail.html</",
             "/korean-region.html</",
             "/science-region.html</",
+            "/social-region.html</",
         ]:
             self.assertNotIn(bare, sitemap, f"Bare template URL {bare} should not be in sitemap")
 
@@ -191,6 +208,7 @@ class SubregionsDataTests(unittest.TestCase):
         self.assertIn("international-detail.html?school=", sitemap)
         self.assertIn("korean-region.html?province=", sitemap)
         self.assertIn("science-region.html?province=", sitemap)
+        self.assertIn("social-region.html?province=", sitemap)
 
     def test_all_korean_city_and_town_urls_are_in_sitemap(self):
         regions = json.loads((ROOT / "data" / "regions.json").read_text(encoding="utf-8"))
@@ -219,6 +237,22 @@ class SubregionsDataTests(unittest.TestCase):
             province = region["province"]
             for city in region["cities"]:
                 city_url = f"science-region.html?province={quote(province, safe='')}&amp;city={quote(city, safe='')}"
+                self.assertIn(city_url, sitemap)
+                self.assertTrue(subregions.get(province, {}).get(city), f"Missing subregions for {province} {city}")
+                for town in subregions[province][city]:
+                    self.assertIn(f"{city_url}&amp;town={quote(town, safe='')}", sitemap)
+
+    def test_all_social_city_and_town_urls_are_in_sitemap(self):
+        regions = json.loads((ROOT / "data" / "regions.json").read_text(encoding="utf-8"))
+        content = (ROOT / "subregions-data.js").read_text(encoding="utf-8")
+        payload = content.split("window.subRegionsData = ", 1)[1].strip().removesuffix(";")
+        subregions = json.loads(payload)
+        sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+
+        for region in regions:
+            province = region["province"]
+            for city in region["cities"]:
+                city_url = f"social-region.html?province={quote(province, safe='')}&amp;city={quote(city, safe='')}"
                 self.assertIn(city_url, sitemap)
                 self.assertTrue(subregions.get(province, {}).get(city), f"Missing subregions for {province} {city}")
                 for town in subregions[province][city]:
