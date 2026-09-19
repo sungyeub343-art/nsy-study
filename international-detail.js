@@ -32,7 +32,7 @@ function updateSchemaData(schoolName) {
     "description": `${schoolName} 국제학교 학생들을 위한 영어, 수학, 과학 과외 상담 및 매칭 서비스`,
     "provider": {
       "@type": "LocalBusiness",
-      "name": "에듀코NSY스터디",
+      "name": "상상코칭",
       "url": "https://nsystudy.kr/",
       "telephone": "+82-10-2928-3614",
       "areaServed": "KR"
@@ -114,7 +114,7 @@ function updateMetaTags(schoolName, city) {
     "inLanguage": "ko-KR",
     "isPartOf": {
       "@type": "WebSite",
-      "name": "에듀코NSY스터디",
+      "name": "상상코칭",
       "url": "https://nsystudy.kr/"
     }
   });
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   // 교사 정보
   let teacherHtml = `<h2 style="margin-top:2rem">👨‍🏫 우리 선생님들</h2>
-    <p style="color:var(--muted);margin-bottom:1.5rem;">에듀코NSY스터디의 국제학교 전문 교사 기준:</p>
+    <p style="color:var(--muted);margin-bottom:1.5rem;">상상코칭의 국제학교 전문 교사 기준:</p>
     <ul style="color:#555;line-height:1.8;">
       <li>✓ 국제학교 또는 해외 교육 경험 보유</li>
       <li>✓ 영어 모국어 수준 또는 완전 능숙</li>
