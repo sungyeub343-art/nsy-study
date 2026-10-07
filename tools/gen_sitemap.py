@@ -4,7 +4,7 @@ from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LASTMOD = "2026-09-14"
+LASTMOD = "2026-10-07"
 BASE = "https://nsystudy.kr"
 
 
@@ -16,12 +16,15 @@ def enc(s):
 HUB_PAGES = [
     ("", 1.0, "weekly"),
     ("regions.html", 0.9, "weekly"),
+    ("math.html", 0.9, "weekly"),
+    ("english.html", 0.9, "weekly"),
     ("korean.html", 0.9, "weekly"),
     ("science.html", 0.9, "weekly"),
     ("social.html", 0.9, "weekly"),
     ("international.html", 0.8, "weekly"),
     ("ged.html", 0.8, "weekly"),
     ("essay.html", 0.8, "weekly"),
+    ("tutoring-guide.html", 0.8, "monthly"),
 ]
 
 # ── Region detail pages ────────────────────────────────────────────────────
@@ -123,6 +126,17 @@ for region in load_regions():
         for town in subregions.get(province, {}).get(city, []):
             town_loc = f"{loc}&amp;town={enc(town)}"
             lines.append(url_entry(town_loc, 0.6, "weekly"))
+
+# math-region.html and english-region.html URLs
+for detail_page in ["math-region.html", "english-region.html"]:
+    for region in load_regions():
+        province = region["province"]
+        for city in region["cities"]:
+            loc = f"{BASE}/{detail_page}?province={enc(province)}&amp;city={enc(city)}"
+            lines.append(url_entry(loc, 0.7, "weekly"))
+            for town in subregions.get(province, {}).get(city, []):
+                town_loc = f"{loc}&amp;town={enc(town)}"
+                lines.append(url_entry(town_loc, 0.6, "weekly"))
 
 # science-region.html URLs
 for region in load_regions():
