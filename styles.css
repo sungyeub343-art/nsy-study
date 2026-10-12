@@ -385,6 +385,207 @@ h1 {
   line-height: 1.3;
 }
 
+.diagnosis-section {
+  background: linear-gradient(135deg, #132b67 0%, #1749b8 58%, #1f73e8 100%);
+  color: #fff;
+}
+
+.diagnosis-layout {
+  display: grid;
+  grid-template-columns: 0.86fr 1.14fr;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+
+.diagnosis-intro {
+  max-width: 470px;
+}
+
+.diagnosis-intro .eyebrow {
+  color: #8ed8ff;
+}
+
+.diagnosis-intro h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.8rem, 3vw, 2.65rem);
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.diagnosis-intro > p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.diagnosis-benefits {
+  display: grid;
+  gap: 0.72rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diagnosis-benefits li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.diagnosis-benefits li::before {
+  content: "✓";
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 1.35rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.14rem;
+  border-radius: 50%;
+  color: #123271;
+  background: #87e3ff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.diagnosis-card {
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border-radius: 26px;
+  color: var(--text);
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(4, 18, 54, 0.3);
+}
+
+.diagnosis-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.diagnosis-progress strong {
+  color: var(--primary);
+}
+
+.diagnosis-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.diagnosis-fields label {
+  display: grid;
+  gap: 0.42rem;
+  font-weight: 700;
+}
+
+.diagnosis-fields label > span {
+  font-size: 0.92rem;
+}
+
+.diagnosis-fields select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 2.5rem 0 0.85rem;
+  border: 1px solid #cddbf2;
+  border-radius: 12px;
+  color: var(--text);
+  background: #f8fbff;
+  font: inherit;
+}
+
+.diagnosis-fields select:focus {
+  outline: 3px solid rgba(31, 95, 255, 0.18);
+  border-color: var(--primary);
+}
+
+.diagnosis-submit {
+  width: 100%;
+  margin-top: 1.2rem;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.diagnosis-privacy {
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  text-align: center;
+}
+
+.diagnosis-result {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem 2rem;
+  margin-top: 2rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 45px rgba(4, 18, 54, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.diagnosis-result[hidden] {
+  display: none;
+}
+
+.diagnosis-result .eyebrow {
+  color: #8ed8ff;
+}
+
+.diagnosis-result h3 {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+}
+
+.diagnosis-result p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.diagnosis-plan {
+  padding: 1.1rem 1.2rem;
+  border-radius: 16px;
+  color: var(--text);
+  background: #fff;
+}
+
+.diagnosis-plan ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--muted);
+}
+
+.diagnosis-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.diagnosis-result .btn-secondary {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.65);
+  background: transparent;
+}
+
+.diagnosis-reset {
+  padding: 0.65rem;
+  border: 0;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .card-grid,
 .review-grid,
 .steps {
@@ -557,11 +758,21 @@ h1 {
 
 @media (max-width: 860px) {
   .hero-grid,
+  .diagnosis-layout,
+  .diagnosis-result,
   .card-grid,
   .steps,
   .review-grid,
   .review-photo-grid,
   .pricing-box {
+    grid-template-columns: 1fr;
+  }
+
+  .diagnosis-intro {
+    max-width: none;
+  }
+
+  .diagnosis-fields {
     grid-template-columns: 1fr;
   }
 

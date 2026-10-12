@@ -62,8 +62,8 @@
       />
     </noscript>
     <link rel="preload" as="image" href="tutoring-landing-11.avif" type="image/avif" fetchpriority="high" />
-    <link rel="preload" href="script.js?v=20260810a" as="script" />
-    <link rel="stylesheet" href="styles.css?v=20260729c" />
+    <link rel="preload" href="script.js?v=20261012a" as="script" />
+    <link rel="stylesheet" href="styles.css?v=20261012a" />
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -195,6 +195,7 @@
               <a href="tutoring-guide.html">과외비용·추천</a>
             </div>
           </details>
+          <a href="#diagnosis">1분 맞춤 진단</a>
           <a href="#about">서비스 소개</a>
           <a href="#process">진행 방식</a>
           <a href="#reviews">후기</a>
@@ -216,8 +217,8 @@
               검정고시 과외, 논술 과외까지 방문 과외와 화상 과외로 시작하세요.
             </p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#contact">무료 상담 신청</a>
-              <a class="btn btn-secondary" href="#about">서비스 보기</a>
+              <a class="btn btn-primary" href="#diagnosis">1분 맞춤 진단</a>
+              <a class="btn btn-secondary" href="#contact">무료 상담 신청</a>
             </div>
             <div class="hero-keywords" aria-label="인기 과외 키워드">
               <span>#중간고사 대비</span>
@@ -255,6 +256,95 @@
               <img class="hero-photo-sub" src="KakaoTalk_20260711_154530910_06.jpg?t=20260824" alt="상담과 소규모 수업을 진행하는 학습 공간" loading="lazy" decoding="async" fetchpriority="low" width="1000" height="750" />
               <div class="hero-badge hero-badge-top">오늘 상담 가능</div>
               <div class="hero-badge hero-badge-bottom">내신 · 수능 · 국제학교 · 검정고시</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section diagnosis-section" id="diagnosis">
+        <div class="container">
+          <div class="diagnosis-layout">
+            <div class="diagnosis-intro">
+              <p class="eyebrow">개인정보 없이 바로 확인</p>
+              <h2>우리 아이에게 필요한 수업 방향을 1분 만에 찾아보세요.</h2>
+              <p>
+                학년과 목표를 선택하면 현재 상황에 맞는 추천 학습 전략과
+                선생님 매칭 기준을 바로 안내해드립니다.
+              </p>
+              <ul class="diagnosis-benefits">
+                <li>별도 가입이나 연락처 입력 없이 결과 확인</li>
+                <li>학생 목표에 맞춘 수업 방식 추천</li>
+                <li>진단 결과를 바탕으로 무료 상담 연결</li>
+              </ul>
+            </div>
+
+            <form class="diagnosis-card" id="diagnosisForm">
+              <div class="diagnosis-progress" aria-hidden="true">
+                <span>맞춤 진단</span>
+                <strong>4개 항목</strong>
+              </div>
+              <div class="diagnosis-fields">
+                <label>
+                  <span>학생 학년</span>
+                  <select id="diagnosisGrade" required>
+                    <option value="">학년을 선택해주세요</option>
+                    <option value="초등">초등학생</option>
+                    <option value="중등">중학생</option>
+                    <option value="고등">고등학생</option>
+                    <option value="성인·기타">성인·검정고시·기타</option>
+                  </select>
+                </label>
+                <label>
+                  <span>희망 과목</span>
+                  <select id="diagnosisSubject" required>
+                    <option value="">과목을 선택해주세요</option>
+                    <option value="수학">수학</option>
+                    <option value="영어">영어</option>
+                    <option value="국어·논술">국어·논술</option>
+                    <option value="과학·사회">과학·사회</option>
+                    <option value="국제학교">국제학교 과정</option>
+                    <option value="검정고시">검정고시</option>
+                  </select>
+                </label>
+                <label>
+                  <span>가장 중요한 목표</span>
+                  <select id="diagnosisGoal" required>
+                    <option value="">목표를 선택해주세요</option>
+                    <option value="기초 보완">기초 개념과 학습 습관 보완</option>
+                    <option value="내신 향상">학교 내신 성적 향상</option>
+                    <option value="입시 대비">수능·입시 집중 대비</option>
+                    <option value="자신감 회복">학습 자신감과 흥미 회복</option>
+                  </select>
+                </label>
+                <label>
+                  <span>선호 수업 방식</span>
+                  <select id="diagnosisMode" required>
+                    <option value="">수업 방식을 선택해주세요</option>
+                    <option value="방문 수업">방문 수업</option>
+                    <option value="화상 수업">화상 수업</option>
+                    <option value="방문·화상 혼합">상황에 따라 혼합</option>
+                  </select>
+                </label>
+              </div>
+              <button class="btn btn-primary diagnosis-submit" type="submit">내 맞춤 학습 방향 확인하기</button>
+              <p class="diagnosis-privacy">선택한 내용은 서버에 저장되지 않습니다.</p>
+            </form>
+          </div>
+
+          <div class="diagnosis-result" id="diagnosisResult" aria-live="polite" hidden>
+            <div>
+              <p class="eyebrow">맞춤 진단 결과</p>
+              <h3 id="diagnosisResultTitle"></h3>
+              <p id="diagnosisResultSummary"></p>
+            </div>
+            <div class="diagnosis-plan">
+              <strong>추천 학습 전략</strong>
+              <ul id="diagnosisResultPlan"></ul>
+            </div>
+            <div class="diagnosis-result-actions">
+              <a class="btn btn-primary" href="tel:+821029283614">결과로 무료 상담하기</a>
+              <a class="btn btn-secondary" id="diagnosisEmail" href="mailto:hello@nsystudy.kr">결과 이메일로 보내기</a>
+              <button class="diagnosis-reset" id="diagnosisReset" type="button">다시 진단하기</button>
             </div>
           </div>
         </div>
@@ -481,6 +571,6 @@
         <a href="#top">맨 위로</a>
       </div>
     </footer>
-    <script src="script.js?v=20260810a" defer></script>
+    <script src="script.js?v=20261012a" defer></script>
   </body>
 </html>
