@@ -262,8 +262,7 @@ function scheduleHomeRegionsInit() {
 
 function initLearningDiagnosis() {
   const form = document.getElementById('diagnosisForm');
-  const result = document.getElementById('diagnosisResult');
-  if (!form || !result) return;
+  if (!form) return;
 
   const fields = {
     studentName: document.getElementById('diagnosisStudentName'),
@@ -274,22 +273,10 @@ function initLearningDiagnosis() {
     goal: document.getElementById('diagnosisGoal'),
     mode: document.getElementById('diagnosisMode')
   };
-  const title = document.getElementById('diagnosisResultTitle');
-  const summary = document.getElementById('diagnosisResultSummary');
-  const plan = document.getElementById('diagnosisResultPlan');
-  const email = document.getElementById('diagnosisEmail');
-  const reset = document.getElementById('diagnosisReset');
 
-  if (Object.values(fields).some((field) => !field) || !title || !summary || !plan || !email || !reset) {
+  if (Object.values(fields).some((field) => !field)) {
     return;
   }
-
-  const goalStrategies = {
-    '기초 보완': ['현재 수준 진단 후 빈 개념부터 단계별 보완', '매 수업 짧은 복습으로 학습 습관 형성'],
-    '내신 향상': ['학교 진도와 시험 범위에 맞춘 주간 학습 계획', '유형별 오답 분석과 시험 전 실전 점검'],
-    '입시 대비': ['목표 전형과 일정에 맞춘 장기 학습 로드맵', '기출 분석을 통한 취약 유형 집중 훈련'],
-    '자신감 회복': ['학생 속도에 맞춘 성공 경험 중심 수업', '흥미 주제와 강점을 활용한 참여형 학습']
-  };
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -298,21 +285,9 @@ function initLearningDiagnosis() {
     const selection = Object.fromEntries(
       Object.entries(fields).map(([key, field]) => [key, field.value])
     );
-    const strategies = [
-      ...goalStrategies[selection.goal],
-      `${selection.mode}에 맞춘 일정과 피드백 방식 설계`
-    ];
-
-    title.textContent = `${selection.grade} ${selection.subject}, ${selection.goal} 중심 설계를 추천합니다.`;
-    summary.textContent = `${selection.mode}으로 시작해 현재 수준을 먼저 확인하고, 학생의 속도에 맞는 선생님을 매칭하는 방향이 좋습니다.`;
-    plan.replaceChildren(...strategies.map((strategy) => {
-      const item = document.createElement('li');
-      item.textContent = strategy;
-      return item;
-    }));
 
     const emailBody = [
-      '상상코칭 맞춤 진단 결과로 상담을 요청합니다.',
+      '상상코칭 맞춤 과외 상담을 요청합니다.',
       '',
       `학생 이름: ${selection.studentName}`,
       `학부모 연락처: ${selection.parentPhone}`,
@@ -322,17 +297,8 @@ function initLearningDiagnosis() {
       `목표: ${selection.goal}`,
       `선호 수업: ${selection.mode}`
     ].join('\n');
-    email.href = `mailto:hello@nsystudy.kr?subject=${encodeURIComponent('맞춤 과외 진단 상담 요청')}&body=${encodeURIComponent(emailBody)}`;
-
-    result.hidden = false;
-    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-
-  reset.addEventListener('click', () => {
-    form.reset();
-    result.hidden = true;
-    fields.grade.focus();
-    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const subject = `맞춤 과외 상담 요청 - ${selection.studentName}`;
+    window.location.href = `mailto:sungyeub343@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
   });
 }
 
