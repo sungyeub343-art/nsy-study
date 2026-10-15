@@ -266,6 +266,9 @@ function initLearningDiagnosis() {
   if (!form || !result) return;
 
   const fields = {
+    studentName: document.getElementById('diagnosisStudentName'),
+    parentPhone: document.getElementById('diagnosisParentPhone'),
+    address: document.getElementById('diagnosisAddress'),
     grade: document.getElementById('diagnosisGrade'),
     subject: document.getElementById('diagnosisSubject'),
     goal: document.getElementById('diagnosisGoal'),
@@ -311,6 +314,9 @@ function initLearningDiagnosis() {
     const emailBody = [
       '상상코칭 맞춤 진단 결과로 상담을 요청합니다.',
       '',
+      `학생 이름: ${selection.studentName}`,
+      `학부모 연락처: ${selection.parentPhone}`,
+      `도로명 주소: ${selection.address}`,
       `학년: ${selection.grade}`,
       `과목: ${selection.subject}`,
       `목표: ${selection.goal}`,

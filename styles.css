@@ -484,10 +484,11 @@ h1 {
   font-size: 0.92rem;
 }
 
+.diagnosis-fields input,
 .diagnosis-fields select {
   width: 100%;
   min-height: 50px;
-  padding: 0 2.5rem 0 0.85rem;
+  padding: 0 0.85rem;
   border: 1px solid #cddbf2;
   border-radius: 12px;
   color: var(--text);
@@ -495,9 +496,22 @@ h1 {
   font: inherit;
 }
 
+.diagnosis-fields select {
+  padding-right: 2.5rem;
+}
+
+.diagnosis-fields input:focus,
 .diagnosis-fields select:focus {
   outline: 3px solid rgba(31, 95, 255, 0.18);
   border-color: var(--primary);
+}
+
+.diagnosis-fields input::placeholder {
+  color: #7a879d;
+}
+
+.diagnosis-field-wide {
+  grid-column: 1 / -1;
 }
 
 .diagnosis-submit {
@@ -774,6 +788,10 @@ h1 {
 
   .diagnosis-fields {
     grid-template-columns: 1fr;
+  }
+
+  .diagnosis-field-wide {
+    grid-column: auto;
   }
 
   .cta-box,
