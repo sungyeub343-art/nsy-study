@@ -1,6 +1,7 @@
 const REGION_CACHE_KEY = 'nsy_regions_v2';
 const HOME_FEATURED_LIMIT = 20;
 const SEARCH_RESULT_LIMIT = 80;
+const DIAGNOSIS_SUBMISSION_ENDPOINT = 'https://formsubmit.co/ajax/sungyeub343@gmail.com';
 
 const fallbackRegions = [
   { province: '서울특별시', cities: ['강남구', '서초구'] },
@@ -273,32 +274,69 @@ function initLearningDiagnosis() {
     goal: document.getElementById('diagnosisGoal'),
     mode: document.getElementById('diagnosisMode')
   };
+  const submit = document.getElementById('diagnosisSubmit');
+  const status = document.getElementById('diagnosisStatus');
 
-  if (Object.values(fields).some((field) => !field)) {
+  if (Object.values(fields).some((field) => !field) || !submit || !status) {
     return;
   }
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
-    const selection = Object.fromEntries(
-      Object.entries(fields).map(([key, field]) => [key, field.value])
-    );
+    const submission = {
+      '학생 이름': fields.studentName.value,
+      '학부모 연락처': fields.parentPhone.value,
+      '도로명 주소': fields.address.value,
+      '학생 학년': fields.grade.value,
+      '희망 과목': fields.subject.value,
+      '가장 중요한 목표': fields.goal.value,
+      '선호 수업 방식': fields.mode.value,
+      _subject: `맞춤 과외 상담 요청 - ${fields.studentName.value}`,
+      _template: 'table',
+      _captcha: 'false'
+    };
+    const originalLabel = submit.textContent;
+    submit.disabled = true;
+    submit.textContent = '전송 중...';
+    status.textContent = '';
+    delete status.dataset.state;
 
-    const emailBody = [
-      '상상코칭 맞춤 과외 상담을 요청합니다.',
-      '',
-      `학생 이름: ${selection.studentName}`,
-      `학부모 연락처: ${selection.parentPhone}`,
-      `도로명 주소: ${selection.address}`,
-      `학년: ${selection.grade}`,
-      `과목: ${selection.subject}`,
-      `목표: ${selection.goal}`,
-      `선호 수업: ${selection.mode}`
-    ].join('\n');
-    const subject = `맞춤 과외 상담 요청 - ${selection.studentName}`;
-    window.location.href = `mailto:sungyeub343@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+    try {
+      const response = await fetch(DIAGNOSIS_SUBMISSION_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(submission)
+      });
+      if (!response.ok) {
+        throw new Error(`상담 접수 요청 실패: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.success !== true && result.success !== 'true') {
+        if (typeof result.message === 'string' && result.message.includes('needs Activation')) {
+          status.textContent = '관리자 이메일로 보낸 FormSubmit 활성화 링크를 확인해주세요.';
+          status.dataset.state = 'error';
+          return;
+        }
+        throw new Error(result.message || '이메일 전송에 실패했습니다.');
+      }
+
+      form.reset();
+      status.textContent = '상담 정보가 정상적으로 전송되었습니다.';
+      status.dataset.state = 'success';
+    } catch (error) {
+      console.error('상담 정보 전송 실패', error);
+      status.textContent = '전송에 실패했습니다. 잠시 후 다시 시도하거나 전화로 문의해주세요.';
+      status.dataset.state = 'error';
+    } finally {
+      submit.disabled = false;
+      submit.textContent = originalLabel;
+    }
   });
 }
 
