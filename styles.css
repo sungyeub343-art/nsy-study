@@ -1150,3 +1150,31 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.keyword-group-title {
+  margin: 1.2rem 0 0.6rem;
+  font-size: 1rem;
+}
+
+.keyword-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.keyword-links a {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.keyword-links a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
