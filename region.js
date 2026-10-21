@@ -36,6 +36,40 @@ function sampleTeachers(province, city){
   return db[key] || [];
 }
 
+function updateMetaTags(province, city, town, placeText){
+  const pageTitle = `${placeText} 과외 | 수학·영어 전과목 무료상담`;
+  const pageDescription = `${placeText} 지역 초등·중등·고등 수학·영어·국어·과학·사회 전과목 1:1 과외 안내입니다. 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.`;
+  const params = new URLSearchParams({ province, city });
+  if(town) params.set('town', town);
+  const canonicalUrl = `https://nsystudy.kr/region.html?${params.toString()}`;
+
+  document.title = pageTitle;
+  const metaTitle = document.getElementById('metaTitle');
+  if(metaTitle) metaTitle.textContent = pageTitle;
+  const ogTitle = document.getElementById('ogTitle');
+  if(ogTitle) ogTitle.setAttribute('content', pageTitle);
+  ['metaDescription', 'ogDescription'].forEach((id) => {
+    const element = document.getElementById(id);
+    if(element) element.setAttribute('content', pageDescription);
+  });
+  let canonical = document.getElementById('canonicalLink');
+  if(!canonical){
+    canonical = document.createElement('link');
+    canonical.id = 'canonicalLink';
+    canonical.rel = 'canonical';
+    document.head.appendChild(canonical);
+  }
+  canonical.setAttribute('href', canonicalUrl);
+  let ogUrl = document.getElementById('ogUrl');
+  if(!ogUrl){
+    ogUrl = document.createElement('meta');
+    ogUrl.id = 'ogUrl';
+    ogUrl.setAttribute('property', 'og:url');
+    document.head.appendChild(ogUrl);
+  }
+  ogUrl.setAttribute('content', canonicalUrl);
+}
+
 function formatDate(){
   const d = new Date();
   return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
@@ -69,6 +103,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const subRegions = getSubRegions(province, city);
   const hasTown = !!town;
   const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  updateMetaTags(province, city, town, placeText);
 
   if(backToList){
     if(hasTown){
