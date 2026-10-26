@@ -28,9 +28,10 @@ function buildKoreanPlaceText(province, city, town){
   return town ? `${base} ${town}` : base;
 }
 
-function updateKoreanMetaTags(placeText){
+function updateKoreanMetaTags(placeText, schools){
+  const schoolHint = buildSchoolHint(schools);
   const pageTitle = `${placeText} 국어 과외 | 초등·중등·고등 무료상담`;
-  const pageDescription = `${placeText} 지역 1:1 국어 과외 안내입니다. 초등 독해와 글쓰기, 중등 내신, 고등 문학·비문학·문법·수능 국어 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.`;
+  const pageDescription = `${placeText} 지역 1:1 국어 과외 안내입니다. 초등 독해와 글쓰기, 중등 내신, 고등 문학·비문학·문법·수능 국어 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.${schoolHint ? ` ${schoolHint} 등 학교별 내신 대비 상담도 가능합니다.` : ''}`;
   const canonicalUrl = buildKoreanCanonicalUrl();
   const keywords = `${placeText} 국어 과외, ${placeText} 국어 과외 추천, ${placeText} 국어 과외 비용, ${placeText} 초등 국어, ${placeText} 중등 국어, ${placeText} 고등 국어, ${placeText} 내신 국어, ${placeText} 수능 국어`;
 
@@ -115,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const placeText = buildKoreanPlaceText(province, city, town);
   const localLabel = town || city;
   const towns = getKoreanRegionTowns(province, city);
-  updateKoreanMetaTags(placeText);
+  const schools = getRegionSchools(province, city);
+  updateKoreanMetaTags(placeText, schools);
 
   if(town){
     backLink.href = buildKoreanRegionUrl(province, city, '');
@@ -167,6 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <p style="margin-bottom:0;color:var(--muted)">상담은 무료이며 학생에게 필요한 수업 범위와 일정, 방문 또는 화상 가능 여부를 확인한 뒤 적합한 수업 방향을 안내합니다.</p>
     </div>
   `;
+
+  content.innerHTML += buildSchoolKeywordsHtml(city, schools, '국어');
 
   const subject = encodeURIComponent(`${placeText} 국어 과외 상담 신청`);
   consult.href = 'tel:+821029283614';

@@ -44,9 +44,10 @@ function updateSchemaData(regionText) {
   upsertJsonLdScript('serviceSchema', serviceSchema);
 }
 
-function updateMetaTags(regionText, essayType = '논술') {
+function updateMetaTags(regionText, essayType = '논술', schools = {middle: [], high: []}) {
+  const schoolHint = buildSchoolHint(schools);
   const pageTitle = `${regionText} ${essayType} 과외 | 대학 입시 맞춤 상담`;
-  const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요. 논술 과외 추천, 논술 과외 비용 상담, 대학별 기출 분석 상담도 가능합니다.`;
+  const pageDescription = `${regionText}에서 수리논술, 인문논술, 약술형논술 준비를 고민 중이라면 입시 전략과 1:1 첨삭 중심의 맞춤형 과외를 만나보세요. ${schoolHint ? `${schoolHint} 등 학교별 수행평가·서술형 대비와 ` : ''}논술 과외 추천, 논술 과외 비용 상담, 대학별 기출 분석 상담도 가능합니다.`;
   const canonicalUrl = buildCanonicalUrl('essay-region.html', ['province', 'city', 'town']);
   const pageKeywords = `${regionText} 논술 과외, ${regionText} 논술 과외 추천, ${regionText} 논술 과외 비용, ${regionText} 수리논술, ${regionText} 인문논술, ${regionText} 약술형논술, ${regionText} 논술 첨삭, 대학 논술 과외, 입시 논술 대비, 대학별 논술 기출`;
   
@@ -205,7 +206,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   hero.src = 'essay-landing-11.jpg?v=20260807a';
   
   // Update meta tags for SEO
-  updateMetaTags(placeText, '논술');
+  const schools = getRegionSchools(province, city);
+  updateMetaTags(placeText, '논술', schools);
   
   // Update schema data
   updateSchemaData(placeText);
@@ -318,6 +320,11 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     </div>
   </div>`;
   content.innerHTML += relatedHtml;
+  content.innerHTML += buildSchoolKeywordsHtml(city, schools, '논술', {
+    examText: '',
+    high: '학생의 학교별 논술형 수행평가와 서술형 시험 대비, 대학별 논술 기출 분석까지 함께하는 1:1 논술 과외 상담이 가능합니다.',
+    middle: '학생의 서술형·논술형 평가에 대비한 글쓰기 기초와 독해·요약 훈련 중심의 1:1 논술 과외 상담이 가능합니다.'
+  });
 
   // Primary action
   const telNumber = '+821029283614';

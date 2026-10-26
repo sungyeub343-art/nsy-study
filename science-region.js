@@ -28,9 +28,10 @@ function buildSciencePlaceText(province, city, town){
   return town ? `${base} ${town}` : base;
 }
 
-function updateScienceMetaTags(placeText){
+function updateScienceMetaTags(placeText, schools){
+  const schoolHint = buildSchoolHint(schools);
   const pageTitle = `${placeText} 과학 과외 | 초등·중등·고등 무료상담`;
-  const pageDescription = `${placeText} 지역 1:1 과학 과외 안내입니다. 초등 과학, 중등 내신, 고등 통합과학·물리학·화학·생명과학·지구과학 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.`;
+  const pageDescription = `${placeText} 지역 1:1 과학 과외 안내입니다. 초등 과학, 중등 내신, 고등 통합과학·물리학·화학·생명과학·지구과학 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.${schoolHint ? ` ${schoolHint} 등 학교별 내신 대비 상담도 가능합니다.` : ''}`;
   const canonicalUrl = buildScienceCanonicalUrl();
   const keywords = `${placeText} 과학 과외, ${placeText} 과학 과외 추천, ${placeText} 과학 과외 비용, ${placeText} 초등 과학, ${placeText} 중등 과학, ${placeText} 고등 과학, ${placeText} 통합과학, ${placeText} 과학탐구`;
 
@@ -115,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const placeText = buildSciencePlaceText(province, city, town);
   const localLabel = town || city;
   const towns = getScienceRegionTowns(province, city);
-  updateScienceMetaTags(placeText);
+  const schools = getRegionSchools(province, city);
+  updateScienceMetaTags(placeText, schools);
 
   if(town){
     backLink.href = buildScienceRegionUrl(province, city, '');
@@ -167,6 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <p style="margin-bottom:0;color:var(--muted)">상담은 무료이며 학생에게 필요한 과목과 수업 범위, 일정, 방문 또는 화상 가능 여부를 확인한 뒤 적합한 수업 방향을 안내합니다.</p>
     </div>
   `;
+
+  content.innerHTML += buildSchoolKeywordsHtml(city, schools, '과학');
 
   const subject = encodeURIComponent(`${placeText} 과학 과외 상담 신청`);
   consult.href = 'tel:+821029283614';

@@ -28,9 +28,10 @@ function buildSocialPlaceText(province, city, town){
   return town ? `${base} ${town}` : base;
 }
 
-function updateSocialMetaTags(placeText){
+function updateSocialMetaTags(placeText, schools){
+  const schoolHint = buildSchoolHint(schools);
   const pageTitle = `${placeText} 사회 과외 | 초등·중등·고등 무료상담`;
-  const pageDescription = `${placeText} 지역 1:1 사회 과외 안내입니다. 초등 사회, 중등 내신, 고등 통합사회·한국사·생활과 윤리·사회문화·정치와 법·경제·지리 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.`;
+  const pageDescription = `${placeText} 지역 1:1 사회 과외 안내입니다. 초등 사회, 중등 내신, 고등 통합사회·한국사·생활과 윤리·사회문화·정치와 법·경제·지리 학습 진단과 방문·화상 수업 무료 상담을 제공합니다.${schoolHint ? ` ${schoolHint} 등 학교별 내신 대비 상담도 가능합니다.` : ''}`;
   const canonicalUrl = buildSocialCanonicalUrl();
   const keywords = `${placeText} 사회 과외, ${placeText} 사회 과외 추천, ${placeText} 사회 과외 비용, ${placeText} 초등 사회, ${placeText} 중등 사회, ${placeText} 고등 사회, ${placeText} 통합사회, ${placeText} 사회탐구`;
 
@@ -115,7 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const placeText = buildSocialPlaceText(province, city, town);
   const localLabel = town || city;
   const towns = getSocialRegionTowns(province, city);
-  updateSocialMetaTags(placeText);
+  const schools = getRegionSchools(province, city);
+  updateSocialMetaTags(placeText, schools);
 
   if(town){
     backLink.href = buildSocialRegionUrl(province, city, '');
@@ -167,6 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <p style="margin-bottom:0;color:var(--muted)">상담은 무료이며 학생에게 필요한 과목과 수업 범위, 일정, 방문 또는 화상 가능 여부를 확인한 뒤 적합한 수업 방향을 안내합니다.</p>
     </div>
   `;
+
+  content.innerHTML += buildSchoolKeywordsHtml(city, schools, '사회');
 
   const subject = encodeURIComponent(`${placeText} 사회 과외 상담 신청`);
   consult.href = 'tel:+821029283614';

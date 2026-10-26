@@ -36,25 +36,9 @@ function sampleTeachers(province, city){
   return db[key] || [];
 }
 
-function getSchools(province, city){
-  const root = window.schoolsData || {};
-  return root[`${province}|${city}`] || {middle: [], high: []};
-}
-
-function buildSchoolsHtml(city, schools){
-  const renderGroup = (label, names) => names.length
-    ? `<h3 style="margin-top:1rem">${city} ${label} 내신 과외</h3>
-      <p style="color:var(--muted)">${names.join(', ')} 학생의 학교별 내신 시험 범위와 출제 경향에 맞춘 1:1 과외 상담이 가능합니다.</p>`
-    : '';
-  const middle = renderGroup('중학교', schools.middle);
-  const high = renderGroup('고등학교', schools.high);
-  if(!middle && !high) return '';
-  return `<h2 style="margin-top:1.2rem">${city} 중·고등학교 내신 대비 과외</h2>${high}${middle}`;
-}
-
 function updateMetaTags(province, city, town, placeText, schools){
   const pageTitle = `${placeText} 과외 | 수학·영어 전과목 무료상담`;
-  const schoolHint = schools.high.slice(0, 3).join('·');
+  const schoolHint = buildSchoolHint(schools);
   const pageDescription = `${placeText} 지역 초등·중등·고등 수학·영어·국어·과학·사회 전과목 1:1 과외 안내입니다. ${schoolHint ? `${schoolHint} 등 학교별 내신 대비와 ` : ''}방문·화상 수업 무료 상담을 제공합니다.`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
@@ -120,7 +104,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const subRegions = getSubRegions(province, city);
   const hasTown = !!town;
   const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
-  const schools = getSchools(province, city);
+  const schools = getRegionSchools(province, city);
   updateMetaTags(province, city, town, placeText, schools);
 
   if(backToList){
@@ -185,7 +169,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   });
   tipsHtml += `</div>`;
   contentEl.innerHTML += tipsHtml;
-  contentEl.innerHTML += buildSchoolsHtml(city, schools);
+  contentEl.innerHTML += buildSchoolKeywordsHtml(city, schools);
 
   // Configure consultation button
   const consultBtn = document.getElementById('consultBtn');
