@@ -40,6 +40,7 @@ function buildKoreanPageUrl(pageName, query){
 }
 
 function buildKoreanDetailUrl(province, city, town){
+  if(!town) return `/local/korean/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
   return buildKoreanPageUrl('korean-region.html', params);

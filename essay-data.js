@@ -92,6 +92,7 @@ function getProvinceLabel(province){
 }
 
 function buildEssayUrl(province, city){
+  return `/local/essay/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   return buildPageUrl('essay-region.html', params);
 }

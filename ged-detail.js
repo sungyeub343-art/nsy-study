@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', async ()=>{
   }
 
   const hasTown = !!town;
-  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const basePlace = province === city ? province : `${province} ${city}`;
+  const placeText = hasTown ? `${basePlace} ${town}` : basePlace;
   const subRegions = getSubRegions(province, city);
   updateMetaTags(placeText);
 

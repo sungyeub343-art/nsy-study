@@ -40,6 +40,7 @@ function buildSciencePageUrl(pageName, query){
 }
 
 function buildScienceDetailUrl(province, city, town){
+  if(!town) return `/local/science/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
   return buildSciencePageUrl('science-region.html', params);

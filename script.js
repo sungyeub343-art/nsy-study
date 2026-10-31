@@ -62,6 +62,7 @@ function buildPageUrl(pageName, query) {
 }
 
 function buildRegionUrl(province, city) {
+  return `/local/all/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   return buildPageUrl('region.html', params);
 }

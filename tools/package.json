@@ -1,0 +1,11 @@
+{
+  "name": "nsystudy-tools",
+  "private": true,
+  "description": "Build scripts for nsystudy.kr static pages",
+  "scripts": {
+    "build:local": "node gen_static_regions.js"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3"
+  }
+}

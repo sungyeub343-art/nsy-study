@@ -42,6 +42,7 @@ function getSubjectProvinceLabel(province){
 }
 
 function buildSubjectDetailUrl(config, province, city, town){
+  if(!town) return `/local/${config.detailPage.replace('-region.html', '')}/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
   return `${config.detailPage}?${params.toString()}`;

@@ -103,7 +103,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
   const subRegions = getSubRegions(province, city);
   const hasTown = !!town;
-  const placeText = hasTown ? `${province} ${city} ${town}` : `${province} ${city}`;
+  const basePlace = province === city ? province : `${province} ${city}`;
+  const placeText = hasTown ? `${basePlace} ${town}` : basePlace;
   const schools = getRegionSchools(province, city);
   updateMetaTags(province, city, town, placeText, schools);
 

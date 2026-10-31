@@ -47,6 +47,7 @@ function getSubRegions(province, city){
 }
 
 function buildRegionUrl(province, city, town){
+  if(!town) return `/local/all/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
   return buildPageUrl('region.html', params);

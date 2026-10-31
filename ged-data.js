@@ -57,6 +57,7 @@ function buildPageUrl(pageName, query) {
 }
 
 function buildGedDetailUrl(province, city, town){
+  if(!town) return `/local/ged/${encodeURIComponent(province === city ? province : `${province}-${city}`)}.html`;
   const params = new URLSearchParams({ province, city });
   if(town) params.set('town', town);
   return buildPageUrl('ged-detail.html', params);
